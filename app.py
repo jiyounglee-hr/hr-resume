@@ -3,6 +3,7 @@ import PyPDF2
 from io import BytesIO
 import os
 import openai
+from openai import OpenAI
 from dotenv import load_dotenv
 from datetime import datetime
 import pandas as pd
@@ -10,10 +11,10 @@ import re
 import base64
 import requests
 from bs4 import BeautifulSoup
-from openai import OpenAI
 
 # OpenAI API 키 설정
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+client = OpenAI()
 
 # 날짜 정규화 함수
 def normalize_date(date_str):
