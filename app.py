@@ -2,7 +2,7 @@ import streamlit as st
 import PyPDF2
 from io import BytesIO
 import os
-from openai import OpenAI
+import openai
 from dotenv import load_dotenv
 from datetime import datetime
 import pandas as pd
@@ -11,8 +11,11 @@ import base64
 import requests
 from bs4 import BeautifulSoup
 
-# OpenAI API 키 설정 및 클라이언트 초기화
-client = OpenAI(api_key=st.secrets.get("OPENAI_API_KEY"))
+# 환경 변수 로드
+load_dotenv()
+
+# OpenAI API 키 설정
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # 날짜 정규화 함수
 def normalize_date(date_str):
@@ -675,7 +678,7 @@ if st.session_state['current_page'] == "resume":
                     text = st.session_state.resume_text
                     
                     # 기존 분석 로직
-                    response = client.chat.completions.create(
+                    response = openai.ChatCompletion.create(
                         model="gpt-3.5-turbo",
                         messages=[
                             {"role": "system", "content": """당신은 전문 채용 담당자입니다. 
@@ -977,7 +980,7 @@ elif st.session_state['current_page'] == "interview1":
                     text = st.session_state.resume_text
                     
                     # 1차 면접 질문 생성
-                    response1 = client.chat.completions.create(
+                    response1 = openai.ChatCompletion.create(
                         model="gpt-3.5-turbo",
                         messages=[
                             {"role": "system", "content": """[당신의 역할]  
@@ -1201,7 +1204,7 @@ elif st.session_state['current_page'] == "interview2":
                     text = st.session_state.resume_text
                     
                     # 2차 면접 질문 생성
-                    response2 = client.chat.completions.create(
+                    response2 = openai.ChatCompletion.create(
                         model="gpt-3.5-turbo",
                         messages=[
                             {"role": "system", "content": """[당신의 역할]  
