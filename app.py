@@ -10,9 +10,10 @@ import re
 import base64
 import requests
 from bs4 import BeautifulSoup
+from openai import OpenAI
 
 # OpenAI API 키 설정
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 # 날짜 정규화 함수
 def normalize_date(date_str):
@@ -675,7 +676,7 @@ if st.session_state['current_page'] == "resume":
                     text = st.session_state.resume_text
                     
                     # 기존 분석 로직
-                    response = openai.ChatCompletion.create(
+                    response = client.chat.completions.create(
                         model="gpt-3.5-turbo",
                         messages=[
                             {"role": "system", "content": """당신은 전문 채용 담당자입니다. 
@@ -977,7 +978,7 @@ elif st.session_state['current_page'] == "interview1":
                     text = st.session_state.resume_text
                     
                     # 1차 면접 질문 생성
-                    response1 = openai.ChatCompletion.create(
+                    response1 = client.chat.completions.create(
                         model="gpt-3.5-turbo",
                         messages=[
                             {"role": "system", "content": """[당신의 역할]  
@@ -1201,7 +1202,7 @@ elif st.session_state['current_page'] == "interview2":
                     text = st.session_state.resume_text
                     
                     # 2차 면접 질문 생성
-                    response2 = openai.ChatCompletion.create(
+                    response2 = client.chat.completions.create(
                         model="gpt-3.5-turbo",
                         messages=[
                             {"role": "system", "content": """[당신의 역할]  
@@ -1250,25 +1251,21 @@ elif st.session_state['current_page'] == "interview2":
 
 [출력 형식 예시]  
 [도전]두려워 말고 시도합니다
-                             
 1. 질문 1 (STAR 구조)  
 2. 질문 2 (STAR 구조)  
 3. 질문 3 (STAR 구조)
 
 [책임감]대충은 없습니다 
-                             
 1. 질문 1 (STAR 구조)  
 2. 질문 2 (STAR 구조)  
 3. 질문 3 (STAR 구조)
 
 [협력]동료와 협업합니다  
-                             
 1. 질문 1 (STAR 구조)  
 2. 질문 2 (STAR 구조)  
 3. 질문 3 (STAR 구조)
 
 [전문성]능동적으로 일합니다  
-                             
 1. 질문 1 (STAR 구조)  
 2. 질문 2 (STAR 구조)  
 3. 질문 3 (STAR 구조)
