@@ -1981,7 +1981,11 @@ elif st.session_state['current_page'] == "evaluation":
             st.session_state.total_score = sum([row["점수"] for row in st.session_state.eval_data])
             
         with total_score_cols[0]:
-            st.button("점수합계 계산", on_click=update_total_score, type="primary")
+            st.form_submit_button(
+                "점수합계 계산", 
+                on_click=update_total_score, 
+                type="primary"
+            )
         
         with total_score_cols[1]:
             st.markdown(f"""
