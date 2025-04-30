@@ -1945,40 +1945,10 @@ elif st.session_state['current_page'] == "evaluation":
             return current_total
 
         # 점수 계산 버튼과 총점 표시를 위한 컬럼
-        score_cols = st.columns([2, 1])
-        
-        # 총점 표시
-        with score_cols[0]:
-            current_total = sum(row["점수"] for row in st.session_state.eval_data)
-            st.markdown(f"""
-                <div style='
-                    background-color: #f0f2f6;
-                    padding: 10px;
-                    border-radius: 5px;
-                    text-align: center;
-                    margin: 5px 0;
-                    font-weight: bold;'>
-                    총점: {current_total} / 100
-                </div>
-            """, unsafe_allow_html=True)
-        
-        # 점수 계산 버튼
+        score_cols = st.columns([3, 1])
         with score_cols[1]:
-            if st.form_submit_button("점수 계산하기", type="secondary", use_container_width=True):
-                current_total = sum(row["점수"] for row in st.session_state.eval_data)
-                score_cols[0].markdown(f"""
-                    <div style='
-                        background-color: #f0f2f6;
-                        padding: 10px;
-                        border-radius: 5px;
-                        text-align: center;
-                        margin: 5px 0;
-                        font-weight: bold;'>
-                        총점: {current_total} / 100
-                    </div>
-                """, unsafe_allow_html=True)
-        
-        st.markdown("<br>", unsafe_allow_html=True)
+            if st.form_submit_button("점수 계산하기", type="secondary"):
+                calculate_total()
         
         for i, row in enumerate(st.session_state.eval_data):
             # 컬럼 비율 조정 (1:2:1:3:0.5)으로 변경
@@ -2026,6 +1996,9 @@ elif st.session_state['current_page'] == "evaluation":
         summary = st.text_area("종합의견", key="summary", label_visibility="visible")
         result = st.selectbox("전형결과", ["합격", "불합격", "보류"], key="result", label_visibility="visible")
         join_date = st.text_input("입사가능시기", key="join_date", label_visibility="visible")
+
+        # 총점 계산
+        total_score = calculate_total()
 
         # 제출 상태 표시를 위한 컨테이너 추가
         submit_status = st.empty()
