@@ -1142,7 +1142,7 @@ if st.session_state['current_page'] == "resume":
     장래 희망 부분을 확인하여 동기가 확실한 인재인지 판단하시면 됩니다.
 
     ② 직무 적합성 평가 : 이력서/자기소개서/포트폴리오를 통해 회사나 팀에서 요구하는 기술이나 기능에 대하여 지원자가 어느 정도 수준을 갖추고 있고, 
-    이미 경력이 있다면 그 경험 중에서 어느 부분이 새로운 직무에 적용 가능한 것인지, 어떤 가치 창출이 가능할지 가늠해 봅니다.
+    이미 경력이 있다면 그 경험 중에서 어느 부분이 새로운 직무에 적용 가능한 것인지 가늠해 봅니다.
 
     ③ 회사와 개인의 문화 적합도 평가 : 조직의 문화와 개인의 특성 간 핏이 잘 맞아야 합니다. 조직의 문화적 특성이 맞는지 아닌지에 따라 같은 인재라도 성과가 달라질 수 있습니다. 
     조직의 핵심 가치인 도전정신, 협력 그리고 전문성, 책임감을 갖추고 있는지를 판단합니다.
@@ -1755,11 +1755,13 @@ elif st.session_state['current_page'] == "evaluation":
         <h5 style='color: #333333; margin-bottom: 20px;'>
             📝 면접 평가서 제출
         </h5>
-    """, unsafe_allow_html=True)
-    st.markdown("""<small style='color: #666666;'>
+        <small style='color: #666666;'>
             회색색으로된 입력칸은 모두 🔖필수 입니다. 본부 및 직무 선택하신 후 면접 평가 내용을 모두 작성해 주세요.
-        </small><br>
-    """, unsafe_allow_html=True)  
+        </small>
+    """, unsafe_allow_html=True)
+    # 추가 공간 넣기
+    st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
+    
     # 본부와 직무 데이터 가져오기
     departments, jobs = get_google_sheet_data()
     
