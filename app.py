@@ -1975,8 +1975,14 @@ elif st.session_state['current_page'] == "evaluation":
         # 총점 계산
         total_score = sum([row["점수"] for row in st.session_state.eval_data])
 
+        # 제출 상태 표시를 위한 컨테이너 추가
+        submit_status = st.empty()
+        
         # 제출 버튼
-        submitted = st.form_submit_button("면접평가표 제출")
+        submitted = st.form_submit_button(
+            "면접평가표 제출", 
+            on_click=lambda: submit_status.info("제출중입니다. 잠시만 기다리세요...")
+        )
         # 빈 공간 추가
         st.markdown("<br>", unsafe_allow_html=True)
     
@@ -2011,10 +2017,6 @@ elif st.session_state['current_page'] == "evaluation":
             if not all_opinions_valid:
                 st.error("모든 항목의 의견을 입력해주세요.")
                 st.stop()  # 스크립트 실행 중단
-            
-            # 처리 중 메시지 표시
-            progress_message = st.empty()
-            progress_message.info("제출중입니다. 잠시만 기다리세요...")
             
             # 후보자 정보 세션 상태 업데이트
             st.session_state.candidate_info.update({
@@ -2064,10 +2066,66 @@ elif st.session_state['current_page'] == "evaluation":
                 content = ', '.join([line.strip() for line in row['내용'].replace('•', '').split('\n') if line.strip()])
                 row_data.extend([content, row["점수"], row["의견"]])
             row_data.extend([summary, result, join_date, total_score])
-            worksheet.append_row(row_data)
             
+            # API 요청 제한 대응을 위한 변수
+            save_success = False
+            max_retries = 3
+            retry_count = 0
             
-            # PDF 다운로드 버튼 표시
+            while not save_success and retry_count < max_retries:
+                try:
+                    # 요청 간 간격 추가 (재시도마다 대기 시간 증가)
+                    if retry_count > 0:
+                        time.sleep(2 * retry_count)  # 재시도마다 2초씩 대기시간 증가
+                        submit_status.info(f"저장 재시도 중... ({retry_count}/{max_retries})")
+                    
+                    # API 인증 과정
+                    credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict, scope)
+                    gc = gspread.authorize(credentials)
+                    sheet_id = st.secrets["google_sheets"]["interview_evaluation_sheet_id"]
+                    worksheet = gc.open_by_key(sheet_id).sheet1
+                    
+                    # 데이터 저장 (기존 검색 로직은 제외하고 바로 저장)
+                    worksheet.append_row(row_data)
+                    save_success = True
+                    
+                except gspread.exceptions.APIError as api_error:
+                    error_message = str(api_error)
+                    retry_count += 1
+                    
+                    # 할당량 초과 오류인 경우
+                    if "429" in error_message or "RESOURCE_EXHAUSTED" in error_message:
+                        if retry_count >= max_retries:
+                            submit_status.empty()
+                            st.error(f"""
+                            **Google API 할당량 초과로 데이터 저장에 실패했습니다.**
+                            
+                            다음 방법을 시도해 보세요:
+                            1. 잠시 기다린 후 다시 시도해 주세요 (약 1분 후)
+                            2. 페이지를 새로고침한 후 다시 작성해 주세요
+                            3. 계속해서 오류가 발생하면 인사팀에 문의해 주세요
+                            
+                            ※ 아래 PDF는 생성 가능하니 다운로드 후 보관하시기 바랍니다.
+                            """)
+                    else:
+                        if retry_count >= max_retries:
+                            submit_status.empty()
+                            st.error(f"Google Sheets 연결 중 오류가 발생했습니다: {error_message}")
+                
+                except Exception as e:
+                    retry_count += 1
+                    if retry_count >= max_retries:
+                        submit_status.empty()
+                        st.error(f"저장 중 오류가 발생했습니다: {str(e)}")
+            
+            # 메시지 제거
+            submit_status.empty()
+            
+            # 저장 성공 시 메시지 표시
+            if save_success:
+                st.success("제출이 완료되었습니다.")
+            
+            # PDF 생성 및 다운로드 버튼 표시 (저장 성공 여부와 관계없이 PDF는 생성)
             import base64
             from io import BytesIO
             from xhtml2pdf import pisa
@@ -2111,162 +2169,165 @@ elif st.session_state['current_page'] == "evaluation":
                             <th style="width: 30%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">의견</th>
                         </tr>"""
 
-            # 평가 데이터 행을 별도로 생성
-            eval_rows = ""
-            for row in st.session_state.eval_data:
-                # 줄바꿈 분할을 f-string 외부에서 처리
-                content_parts = []
-                for line in row['내용'].replace('•', '').split('\n'):
-                    if line.strip():
-                        content_parts.append(line.strip())
-                content_str = ', '.join(content_parts)
-                
-                row_content = f"""
-                        <tr>
-                            <td style="border: 1px solid #000; padding: 5px;">{row['구분']}</td>
-                            <td style="border: 1px solid #000; padding: 5px;">{content_str}</td>
-                            <td style="border: 1px solid #000; padding: 5px; text-align: center;">{row['점수']} / {row['만점']}</td>
-                            <td style="border: 1px solid #000; padding: 5px;">{row['의견']}</td>
-                        </tr>"""
-                eval_rows += row_content
+                # 평가 데이터 행을 별도로 생성
+                eval_rows = ""
+                for row in st.session_state.eval_data:
+                    # 줄바꿈 분할을 f-string 외부에서 처리
+                    content_parts = []
+                    for line in row['내용'].replace('•', '').split('\n'):
+                        if line.strip():
+                            content_parts.append(line.strip())
+                    content_str = ', '.join(content_parts)
+                    
+                    row_content = f"""
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 5px;">{row['구분']}</td>
+                                <td style="border: 1px solid #000; padding: 5px;">{content_str}</td>
+                                <td style="border: 1px solid #000; padding: 5px; text-align: center;">{row['점수']} / {row['만점']}</td>
+                                <td style="border: 1px solid #000; padding: 5px;">{row['의견']}</td>
+                            </tr>"""
+                    eval_rows += row_content
 
-            # HTML 템플릿 계속
-            html += eval_rows + f"""
-                        <tr>
-                            <th colspan="2" style="border: 1px solid #000; padding: 5px;">총점</th>
-                            <td style="border: 1px solid #000; padding: 5px;">{total_score} / 100</td>
-                            <td style="border: 1px solid #000; padding: 5px;">-</td>
-                        </tr>
+                # HTML 템플릿 계속
+                html += eval_rows + f"""
+                            <tr>
+                                <th colspan="2" style="border: 1px solid #000; padding: 5px;">총점</th>
+                                <td style="border: 1px solid #000; padding: 5px;">{total_score} / 100</td>
+                                <td style="border: 1px solid #000; padding: 5px;">-</td>
+                            </tr>
 
-                    </table>
+                        </table>
+                    </div>
+                    <p><br><br><b>ㆍ종합의견 및 결과</b></p>      
+        
+                    <div style="margin-bottom: 15px;">
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; table-layout: fixed;">
+                            <tr>
+                                <th style="width: 15%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">종합의견</th>
+                                <td colspan="3" style="border: 1px solid #000; padding: 5px;">{summary}</td>
+                            </tr>
+                            <tr>
+                                <th style="border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">전형결과</th>
+                                <td style="width: 20%; border: 1px solid #000; padding: 5px;">{result}</td>
+                                <th style="width: 15%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">입사가능시기</th>
+                                <td style="width: 35%; border: 1px solid #000; padding: 5px;">{join_date}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-                <p><br><br><b>ㆍ종합의견 및 결과</b></p>      
-    
-                <div style="margin-bottom: 15px;">
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; table-layout: fixed;">
-                        <tr>
-                            <th style="width: 15%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">종합의견</th>
-                            <td colspan="3" style="border: 1px solid #000; padding: 5px;">{summary}</td>
-                        </tr>
-                        <tr>
-                            <th style="border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">전형결과</th>
-                            <td style="width: 20%; border: 1px solid #000; padding: 5px;">{result}</td>
-                            <th style="width: 15%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">입사가능시기</th>
-                            <td style="width: 35%; border: 1px solid #000; padding: 5px;">{join_date}</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            """
+                """
 
-            def create_pdf(html_content):
-                try:
-                    # HTML 템플릿에 한글 웹폰트 추가
-                    html_with_font = f'''
-                    <html>
-                    <head>
-                        <meta charset="utf-8">
-                        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
-                        <style>
-                            @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
-                            * {{
-                                font-family: 'Noto Sans KR', sans-serif !important;
-                            }}
-                            body {{
-                                font-family: 'Noto Sans KR', sans-serif !important;
-                                font-size: 12px;
-                                line-height: 1.5;
-                            }}
-                            table {{
-                                width: 100%;
-                                border-collapse: collapse;
-                                margin-bottom: 10px;
-                                table-layout: fixed;
-                            }}
-                            th, td {{
-                                border: 1px solid black;
-                                padding: 8px;
-                                text-align: left;
-                                font-family: 'Noto Sans KR', sans-serif !important;
-                                word-wrap: break-word;
-                                overflow-wrap: break-word;
-                            }}
-                            th {{
-                                background-color: #f2f2f2;
-                            }}
-                            h1, h2, h3, h4, h5, h6, p, span, div {{
-                                font-family: 'Noto Sans KR', sans-serif !important;
-                            }}
-                            .content-item {{
-                                margin-bottom: 8px;
-                            }}
-                            .empty-cell {{
-                                min-height: 1.5em;
-                                display: block;
-                            }}
-                        </style>
-                    </head>
-                    <body>
-                        {html_content}
-                    </body>
-                    </html>
-                    '''
+                def create_pdf(html_content):
+                    try:
+                        # HTML 템플릿에 한글 웹폰트 추가
+                        html_with_font = f'''
+                        <html>
+                        <head>
+                            <meta charset="utf-8">
+                            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+                            <style>
+                                @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+                                * {{
+                                    font-family: 'Noto Sans KR', sans-serif !important;
+                                }}
+                                body {{
+                                    font-family: 'Noto Sans KR', sans-serif !important;
+                                    font-size: 12px;
+                                    line-height: 1.5;
+                                }}
+                                table {{
+                                    width: 100%;
+                                    border-collapse: collapse;
+                                    margin-bottom: 10px;
+                                    table-layout: fixed;
+                                }}
+                                th, td {{
+                                    border: 1px solid black;
+                                    padding: 8px;
+                                    text-align: left;
+                                    font-family: 'Noto Sans KR', sans-serif !important;
+                                    word-wrap: break-word;
+                                    overflow-wrap: break-word;
+                                }}
+                                th {{
+                                    background-color: #f2f2f2;
+                                }}
+                                h1, h2, h3, h4, h5, h6, p, span, div {{
+                                    font-family: 'Noto Sans KR', sans-serif !important;
+                                }}
+                                .content-item {{
+                                    margin-bottom: 8px;
+                                }}
+                                .empty-cell {{
+                                    min-height: 1.5em;
+                                    display: block;
+                                }}
+                            </style>
+                        </head>
+                        <body>
+                            {html_content}
+                        </body>
+                        </html>
+                        '''
 
-                    # 내용의 각 항목을 줄바꿈으로 분리
-                    html_with_font = html_with_font.replace('• ', '<div class="content-item">• ').replace('<br>', '</div>')
-                    
-                    # PDF 옵션 설정
-                    pdf_options = {
-                        'encoding': 'utf-8',
-                        'page-size': 'A4',
-                        'margin-top': '1.0cm',
-                        'margin-right': '1.0cm',
-                        'margin-bottom': '1.0cm',
-                        'margin-left': '1.0cm',
-                        'enable-local-file-access': True,
-                        'load-error-handling': 'ignore'
-                    }
-                    
-                    # PDF 생성
-                    result_file = BytesIO()
-                    pdf = pisa.pisaDocument(
-                        BytesIO(html_with_font.encode('utf-8')), 
-                        result_file,
-                        encoding='utf-8',
-                        options=pdf_options
-                    )
-                    
-                    if pdf.err:
-                        st.error(f"PDF 생성 중 오류가 발생했습니다: {pdf.err}")
+                        # 내용의 각 항목을 줄바꿈으로 분리
+                        html_with_font = html_with_font.replace('• ', '<div class="content-item">• ').replace('<br>', '</div>')
+                        
+                        # PDF 옵션 설정
+                        pdf_options = {
+                            'encoding': 'utf-8',
+                            'page-size': 'A4',
+                            'margin-top': '1.0cm',
+                            'margin-right': '1.0cm',
+                            'margin-bottom': '1.0cm',
+                            'margin-left': '1.0cm',
+                            'enable-local-file-access': True,
+                            'load-error-handling': 'ignore'
+                        }
+                        
+                        # PDF 생성
+                        result_file = BytesIO()
+                        pdf = pisa.pisaDocument(
+                            BytesIO(html_with_font.encode('utf-8')), 
+                            result_file,
+                            encoding='utf-8',
+                            options=pdf_options
+                        )
+                        
+                        if pdf.err:
+                            st.error(f"PDF 생성 중 오류가 발생했습니다: {pdf.err}")
+                            return None
+                            
+                        return result_file.getvalue()
+                    except Exception as e:
+                        st.error(f"PDF 생성 중 오류가 발생했습니다: {str(e)}")
                         return None
                         
-                    return result_file.getvalue()
-                except Exception as e:
-                    st.error(f"PDF 생성 중 오류가 발생했습니다: {str(e)}")
-                    return None
-                    
-            # 처리 중 메시지 제거
-            progress_message.empty()
-            # PDF 생성 및 다운로드 버튼 표시
-            pdf = create_pdf(html)
-            if pdf:
-                b64 = base64.b64encode(pdf).decode()
-                col1, col2 = st.columns([1, 1])
-                with col1:
-                    st.success("제출이 완료되었습니다.")
-                with col2:
-                    st.markdown(
-                        f'<a href="data:application/pdf;base64,{b64}" download="면접평가표.pdf" '
-                        f'style="display: inline-block; padding: 8px 16px; '
-                        f'background-color: #f0f2f6; color: #262730; '
-                        f'text-decoration: none; border-radius: 4px; '
-                        f'border: 1px solid #d1d5db;">'
-                        f'📥 PDF 다운로드</a>',
-                        unsafe_allow_html=True
-                    )
-            else:
-                st.error("PDF 생성 중 오류가 발생했습니다. 인사팀에 문의해주세요.")
-            
+                # 처리 중 메시지 제거
+                submit_status.empty()
+                # PDF 생성 및 다운로드 버튼 표시
+                pdf = create_pdf(html)
+                if pdf:
+                    b64 = base64.b64encode(pdf).decode()
+                    col1, col2 = st.columns([1, 1])
+                    with col1:
+                        st.success("제출이 완료되었습니다.")
+                    with col2:
+                        st.markdown(
+                            f'<a href="data:application/pdf;base64,{b64}" download="면접평가표.pdf" '
+                            f'style="display: inline-block; padding: 8px 16px; '
+                            f'background-color: #f0f2f6; color: #262730; '
+                            f'text-decoration: none; border-radius: 4px; '
+                            f'border: 1px solid #d1d5db;">'
+                            f'📥 PDF 다운로드</a>',
+                            unsafe_allow_html=True
+                        )
+                else:
+                    st.error("PDF 생성 중 오류가 발생했습니다. 인사팀에 문의해주세요.")
+                
+            except Exception as e:
+                st.error(f"저장 중 오류: 인사팀에 문의해주세요! {str(e)}")
+
         except Exception as e:
             st.error(f"저장 중 오류: 인사팀에 문의해주세요! {str(e)}")
 
