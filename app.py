@@ -2000,7 +2000,8 @@ elif st.session_state['current_page'] == "evaluation":
             st.form_submit_button(
                 "점수합계 계산",
                 key="calculate_score_btn",
-                on_click=update_total_score
+                on_click=update_total_score,
+                type="primary"
             )
         
         with total_score_cols[1]:
