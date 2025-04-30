@@ -1968,7 +1968,7 @@ elif st.session_state['current_page'] == "evaluation":
                 st.markdown("<br>", unsafe_allow_html=True)
 
         # 총점 표시를 위한 컨테이너와 점수 계산 버튼을 위한 컬럼
-        score_cols = st.columns([7, 0.5])
+        score_cols = st.columns([6.5, 0.5])
         
         # 총점 표시를 위한 컨테이너
         total_container = score_cols[0].empty()
@@ -2199,7 +2199,7 @@ elif st.session_state['current_page'] == "evaluation":
                         <tr>
                             <th style="width: 18%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">평가구분</th>
                             <th style="width: 39%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">내용</th>
-                            <th style="width: 13%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">점수</th>
+                            <th style="width: 13%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0; text-align: center;">점수</th>
                             <th style="width: 30%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">의견</th>
                         </tr>"""
 
@@ -2226,7 +2226,7 @@ elif st.session_state['current_page'] == "evaluation":
             html += eval_rows + f"""
                             <tr>
                                 <th colspan="2" style="border: 1px solid #000; padding: 5px;">총점</th>
-                                <td style="border: 1px solid #000; padding: 5px;">{total_score} / 100</td>
+                                <td style="border: 1px solid #000; padding: 5px; text-align: center;">{total_score} / 100</td>
                                 <td style="border: 1px solid #000; padding: 5px;">-</td>
                             </tr>
 
@@ -2598,7 +2598,7 @@ elif st.session_state['current_page'] == "admin":
                                 <tr>
                                     <th style="width: 18%;">평가구분</th>
                                     <th style="width: 39%;">내용</th>
-                                    <th style="width: 13%;">점수</th>
+                                    <th style="width: 13%; text-align: center;">점수</th>
                                     <th style="width: 30%;">의견</th>
                                 </tr>"""
 
