@@ -1987,31 +1987,31 @@ elif st.session_state['current_page'] == "evaluation":
             st.session_state.total_score = total
             return total
         
-        # 초기 계산 실행
-        update_total_score()
+        # 모든 number_input 위젯이 변경될 때마다 호출될 콜백 함수
+        for i in range(len(st.session_state.eval_data)):
+            score_key = f"score_{i}"
+            if score_key in st.session_state:
+                update_total_score()
         
         # 점수 합계 표시 섹션
         st.markdown("<br><b>점수 합계</b>", unsafe_allow_html=True)
-        total_score_cols = st.columns([1, 3, 1])
         
         # 합계 표시
-        with total_score_cols[1]:
-            # 점수 표시 - 현재 계산된 점수 표시
-            st.markdown(f"""
-            <div style='
-                background-color: #f8f9fa; 
-                padding: 10px; 
-                border-radius: 5px; 
-                border: 1px solid #ddd; 
-                margin-top: 5px;
-                font-weight: bold;
-                font-size: 1.2em;
-                text-align: center;'>
-                총점: {st.session_state.total_score} / 100
-            </div>
-            """, unsafe_allow_html=True)
-            
-            st.caption("점수 입력 시 자동으로 합계가 계산됩니다.")
+        st.markdown(f"""
+        <div style='
+            background-color: #f8f9fa; 
+            padding: 10px; 
+            border-radius: 5px; 
+            border: 1px solid #ddd; 
+            margin-top: 5px;
+            font-weight: bold;
+            font-size: 1.2em;
+            text-align: center;'>
+            총점: {update_total_score()} / 100
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.caption("점수 입력 시 자동으로 합계가 계산됩니다.")
         
         # 종합의견, 전형결과, 입사가능시기
         st.markdown("<br><b>종합의견 및 결과</b>", unsafe_allow_html=True)
@@ -2028,7 +2028,8 @@ elif st.session_state['current_page'] == "evaluation":
         # 제출 버튼
         submitted = st.form_submit_button(
             "면접평가표 제출", 
-            on_click=lambda: submit_status.info("제출중입니다. 잠시만 기다리세요...")
+            on_click=lambda: submit_status.info("제출중입니다. 잠시만 기다리세요..."),
+            type="primary"
         )
         # 빈 공간 추가
         st.markdown("<br>", unsafe_allow_html=True)
