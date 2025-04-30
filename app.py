@@ -1181,7 +1181,7 @@ elif st.session_state['current_page'] == "interview1":
         """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     # 채용공고 링크 입력
-    job_link = st.text_input("채용공고 링크를 입력해주세요. (왼쪽에 뉴로핏 커리어 링크를 클릭해 진행중인 공고 링크를 복/붙)", placeholder="https://career.neurophet.com/...")
+    job_link = st.text_input("채용공고 링크를 입력해주세요.", placeholder="https://career.neurophet.com/1d29976c-730b-80b6-92b2-d8cd39bfbfd9")
     
     if job_link:
         try:
@@ -1471,7 +1471,7 @@ elif st.session_state['current_page'] == "interview2":
         </div>
         """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
-    job_link = st.text_input("채용공고 링크를 입력해주세요. (왼쪽에 뉴로핏 커리어 링크를 클릭해 진행중인 공고 링크를 넣어주세요. )", placeholder="https://career.neurophet.com/...")
+    job_link = st.text_input("채용공고 링크를 입력해주세요.", placeholder="https://career.neurophet.com/1d29976c-730b-80b6-92b2-d8cd39bfbfd9")
     
     if job_link:
         try:
