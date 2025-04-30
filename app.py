@@ -1160,7 +1160,7 @@ elif st.session_state['current_page'] == "interview1":
     st.markdown("###### 🚩 1차 면접전형 절차는 어떻게 되나요?")
     
     st.markdown("""
-     1. <b>1차 면접실시</b> : 사전에 협의 된 일정에 맞추어 면접을 진행합니다. 면접 순서 숙지 및 면접질문을 준비해 주세요! <small style='color: #666666;'>
+     1. <b>1차 면접실시</b> : 사전에 협의 된 일정에 맞추어 면접을 진행합니다. 면접 순서를 숙지해주시고 면접질문도 준비해 주세요! <small style='color: #666666;'>
             (아래 '🤖 AI가 면접질문을 뽑아드려요.'를 활용해 보세요)
         </small>
     """, unsafe_allow_html=True)
@@ -1318,7 +1318,7 @@ elif st.session_state['current_page'] == "interview1":
         )
     st.markdown("""
         <small style='color: #666666;'>
-            업무 지식 및 직무기술 직무 수행 태도 및 자세 관련 질문을 추출합니다. <br>
+            AI를 통해 업무 지식 및 직무기술 직무 수행 태도 및 자세 관련 질문을 추출합니다. <br>
             인상, 태도, 복장 등 전반적인 기본자세는 잘 관찰해주시고, 경력자의 경우 이직사유에 대해서도 체크부탁드립니다. 
         </small>
     """, unsafe_allow_html=True)  
@@ -1440,7 +1440,7 @@ elif st.session_state['current_page'] == "interview1":
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("###### 🚫  면접 시 절대 하지 말아야 하는 질문 ")
     st.markdown("""
-    면접 시 직무와 무관한 질문은 자제해 주시기 바랍니다. 
+     면접 시 직무와 무관한 질문은 자제해 주시기 바랍니다. 
     1. <b>신체적 조건</b> : "생각보다 작아 보이는데 키가 얼마나 되시나요?" "체격이 좋네요. 어렸을 때 운동하셨나요?" 
                 
     2. <b>출신지역ㆍ혼인여부ㆍ재산 관련 질문</b> : "사투리 쓰시네요? 어디 출신이에요?" "결혼하셨어요? 언제 하셨는데요?" "아이가 있으신가요?" "현재 만나는 사람이 없으신가요?"
