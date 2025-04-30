@@ -1163,7 +1163,7 @@ elif st.session_state['current_page'] == "interview1":
     ① 1차 면접실시 : 사전에 협의 된 일정에 맞추어 면접을 진행합니다. 면접 순서 및 질문을 숙지해 주세요! <small style='color: #666666;'>
             (아래 '🤖 AI가 면접질문을 뽑아드려요.'를 활용해 보세요)
         </small>
-    """)
+    """, unsafe_allow_html=True)
     st.markdown(""" ② 1차 면접 평가제출 : 면접 결과를 작성하신 후 제출해 주세요.
         <small style='color: #666666;'>
             (아래 버튼을 누르시면 '📝 면접평가서 제출' 페이지로 이동합니다.)
@@ -1460,7 +1460,8 @@ elif st.session_state['current_page'] == "interview2":
     st.markdown("""
     2차 면접실시 및 평가: 사전에 협의 된 일정에 맞추어 면접을 진행합니다. 핵심가치에 부합되는 평가를 부탁드려요! <small style='color: #666666;'>
             (아래 '🤖 AI가 면접질문을 뽑아 드려요!'를 활용해 보세요)
-        </small>""")
+        </small>
+        """, unsafe_allow_html=True)
 
     # 채용공고 링크 입력   st.markdown("###### 🤖 AI가 면접질문을 뽑아 드려요.")
     st.markdown("""
