@@ -131,7 +131,7 @@ def get_eval_template_from_sheet(selected_dept, selected_job):
                     {"구분": "업무 지식", "내용": format_items(row.get('업무지식', '')), "만점": 30, "점수": 0, "의견": ""},
                     {"구분": "직무기술", "내용": format_items(row.get('직무기술', '')), "만점": 30, "점수": 0, "의견": ""},
                     {"구분": "직무 수행 태도 및 자세", "내용": format_items(row.get('직무수행 태도 및 자세', '')), "만점": 30, "점수": 0, "의견": ""},
-                    {"구분": "기본인성", "내용": "• 복장은 단정한가?\n• 태도는 어떤가?\n• 적극적으로 답변하는가?", "만점": 10, "점수": 0, "의견": ""}
+                    {"구분": "기본인성", "내용": "• 복장은 단정한가?\n• 태도는 어떤가?\n• 적극적으로 답변하는가?\n• 뉴로핏에 대해서 얼마나 알고 있는가?\n• 이직사유& 뉴로핏에 지원한 동기는?", "만점": 10, "점수": 0, "의견": ""}
                 ]
         
         # 해당하는 템플릿이 없는 경우 기본 템플릿 반환
@@ -1725,7 +1725,6 @@ elif st.session_state['current_page'] == "interview2":
             1차 면접 평가 내용을 기반으로 직무 적합성을 재검토하고, 회사의 핵심가치(Core Value)를 갖춘 인재인지 판단해 주세요.
         </small>
     """, unsafe_allow_html=True)  
-    st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("---")
     st.markdown("###### 📒 2차 면접 순서")
     st.markdown("""
