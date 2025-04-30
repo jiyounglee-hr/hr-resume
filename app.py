@@ -6,7 +6,7 @@ import gspread
 from gspread.client import Client
 import json
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import base64
 from io import BytesIO
 import PyPDF2
@@ -803,9 +803,21 @@ if st.session_state['current_page'] == "resume":
                         'Sec-Fetch-User': '?1'
                     }
                     
-                    # 웹 페이지 가져오기
-                    response = requests.get(job_link, headers=headers, timeout=10)
-                    response.raise_for_status()
+                    # 최대 3번까지 재시도
+                    max_retries = 3
+                    retry_count = 0
+                    while retry_count < max_retries:
+                        try:
+                            # 웹 페이지 가져오기 (타임아웃 30초)
+                            response = requests.get(job_link, headers=headers, timeout=30)
+                            response.raise_for_status()
+                            break  # 성공하면 반복문 종료
+                        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+                            retry_count += 1
+                            if retry_count == max_retries:
+                                raise  # 최대 재시도 횟수 초과시 예외 발생
+                            st.warning(f"연결 시도 {retry_count}/{max_retries}...")
+                            time.sleep(1)  # 1초 대기 후 재시도
                     
                     # 인코딩 설정
                     response.encoding = 'utf-8'
@@ -1199,9 +1211,21 @@ elif st.session_state['current_page'] == "interview1":
                 'Sec-Fetch-User': '?1'
             }
             
-            # 웹 페이지 가져오기
-            response = requests.get(job_link, headers=headers, timeout=10)
-            response.raise_for_status()
+            # 최대 3번까지 재시도
+            max_retries = 3
+            retry_count = 0
+            while retry_count < max_retries:
+                try:
+                    # 웹 페이지 가져오기 (타임아웃 30초)
+                    response = requests.get(job_link, headers=headers, timeout=30)
+                    response.raise_for_status()
+                    break  # 성공하면 반복문 종료
+                except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+                    retry_count += 1
+                    if retry_count == max_retries:
+                        raise  # 최대 재시도 횟수 초과시 예외 발생
+                    st.warning(f"연결 시도 {retry_count}/{max_retries}...")
+                    time.sleep(1)  # 1초 대기 후 재시도
             
             # 인코딩 설정
             response.encoding = 'utf-8'
@@ -1501,9 +1525,21 @@ elif st.session_state['current_page'] == "interview2":
                 'Sec-Fetch-User': '?1'
             }
             
-            # 웹 페이지 가져오기
-            response = requests.get(job_link, headers=headers, timeout=10)
-            response.raise_for_status()
+            # 최대 3번까지 재시도
+            max_retries = 3
+            retry_count = 0
+            while retry_count < max_retries:
+                try:
+                    # 웹 페이지 가져오기 (타임아웃 30초)
+                    response = requests.get(job_link, headers=headers, timeout=30)
+                    response.raise_for_status()
+                    break  # 성공하면 반복문 종료
+                except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+                    retry_count += 1
+                    if retry_count == max_retries:
+                        raise  # 최대 재시도 횟수 초과시 예외 발생
+                    st.warning(f"연결 시도 {retry_count}/{max_retries}...")
+                    time.sleep(1)  # 1초 대기 후 재시도
             
             # 인코딩 설정
             response.encoding = 'utf-8'
