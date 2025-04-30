@@ -1469,12 +1469,14 @@ elif st.session_state['current_page'] == "interview2":
 
     2. <b>면접 결과 입력 및 전달</b> : 면접 종료 후, 채용 채팅(팀즈)를 통해 결과를 인사팀에 회신해 주세요.
 
-    3. <b>연봉 협상 및 입사 확정</b>(인사팀 진행)<br>
+    3. <b>연봉 협상 및 입사 확정</b> (인사팀 진행)<br>
         - 합격자: 인사팀이 연봉협상 및 입사 일정을 안내합니다.<br>
         - 불합격자: 인사팀에서 이메일을 통해 개별 통보합니다.
         """, unsafe_allow_html=True)
-
-    # 채용공고 링크 입력   st.markdown("###### 🤖 AI가 면접질문을 뽑아 드려요.")
+        
+    st.markdown("---")
+    # 채용공고 링크 입력   
+    st.markdown("###### 🤖 AI가 면접질문을 뽑아 드려요.")
     st.markdown("""
         <div style='font-size: 13px; color: #0066cc;'>
         👈 왼쪽에 이력서를 업데이트(<a href="https://career.neurophet.com/recruit" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, <a href="https://career.neurophet.com/recruit" target="_blank">🔗뉴로핏 커리어 링크</a>를 클릭해 진행중인 공고 링크를 넣어주세요. 
