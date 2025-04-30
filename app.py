@@ -1166,7 +1166,7 @@ elif st.session_state['current_page'] == "interview1":
     """, unsafe_allow_html=True)
     st.markdown(""" ② 1차 면접 평가제출 : 면접 결과를 작성하신 후 제출해 주세요.
         <small style='color: #666666;'>
-            (아래 버튼을 누르시면 '📝 면접평가서 제출' 페이지로 이동합니다.)
+            ('📝 면접평가서 제출'버튼을 누르면 해당 페이지로 이동합니다.)
         </small>
     """, unsafe_allow_html=True)  
     left_space, button_col = st.columns([0.1, 0.9])
@@ -1176,9 +1176,10 @@ elif st.session_state['current_page'] == "interview1":
     st.markdown("###### 🤖 AI가 면접질문을 뽑아 드려요.")
     st.markdown("""
         <div style='font-size: 13px; color: #0066cc;'>
-        왼쪽에 이력서를 업데이트 하신 후, 채용공고 링크를 넣어주세요.
+        👈 왼쪽에 이력서를 업데이트(<a href="https://career.neurophet.com/recruit" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, <a href="https://career.neurophet.com/recruit" target="_blank">🔗뉴로핏 커리어 링크</a>를 클릭해 진행중인 공고 링크를 넣어주세요. 
         </div>
         """, unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
     # 채용공고 링크 입력
     job_link = st.text_input("채용공고 링크를 입력해주세요. (왼쪽에 뉴로핏 커리어 링크를 클릭해 진행중인 공고 링크를 복/붙)", placeholder="https://career.neurophet.com/...")
     
@@ -1466,9 +1467,10 @@ elif st.session_state['current_page'] == "interview2":
     # 채용공고 링크 입력   st.markdown("###### 🤖 AI가 면접질문을 뽑아 드려요.")
     st.markdown("""
         <div style='font-size: 13px; color: #0066cc;'>
-        왼쪽에 이력서를 업데이트 하신 후, 채용공고 링크를 넣어주세요.
+        👈 왼쪽에 이력서를 업데이트(<a href="https://career.neurophet.com/recruit" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, <a href="https://career.neurophet.com/recruit" target="_blank">🔗뉴로핏 커리어 링크</a>를 클릭해 진행중인 공고 링크를 넣어주세요. 
         </div>
         """, unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
     job_link = st.text_input("채용공고 링크를 입력해주세요. (왼쪽에 뉴로핏 커리어 링크를 클릭해 진행중인 공고 링크를 넣어주세요. )", placeholder="https://career.neurophet.com/...")
     
     if job_link:
