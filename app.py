@@ -1988,14 +1988,28 @@ elif st.session_state['current_page'] == "evaluation":
                 "후보자명": candidate_name,
                 "면접관성명": interviewer_name,
                 "최종학교/전공": education,
-                "경력년월": experience
+                "경력년월": experience,
+                "종합의견": summary,
+                "입사가능시기": join_date
             }
             
             # 빈 필드 확인
             empty_fields = [field for field, value in required_fields.items() if not value.strip()]
             
+            # 점수 검증
+            all_scores_valid = all(row["점수"] > 0 for row in st.session_state.eval_data)
+            all_opinions_valid = all(row["의견"].strip() for row in st.session_state.eval_data)
+            
             if empty_fields:
                 st.error(f"다음 필수 항목을 입력해주세요: {', '.join(empty_fields)}")
+                st.stop()  # 스크립트 실행 중단
+            
+            if not all_scores_valid:
+                st.error("모든 항목의 점수를 입력해주세요.")
+                st.stop()  # 스크립트 실행 중단
+                
+            if not all_opinions_valid:
+                st.error("모든 항목의 의견을 입력해주세요.")
                 st.stop()  # 스크립트 실행 중단
             
             # 처리 중 메시지 표시
