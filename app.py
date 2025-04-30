@@ -766,8 +766,9 @@ if st.session_state['current_page'] == "resume":
     st.markdown("###### 🤖 AI가 이력서 분석을 도와드려요!")
     st.markdown("""
         <div style='font-size: 13px; color: #0066cc;'>
-        👈 왼쪽에 이력서를 업데이트(<a href="https://career.neurophet.com/recruit" target="_blank">🔗이력서 링크</a>)에서 다운로드 하신 후, <a href="https://career.neurophet.com/recruit" target="_blank">🔗뉴로핏 커리어 링크</a>를 클릭해 진행중인 공고 링크를 넣어주세요. 
+        👈 왼쪽에 이력서를 업데이트(<a href="https://career.neurophet.com/recruit" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, <a href="https://career.neurophet.com/recruit" target="_blank">🔗뉴로핏 커리어 링크</a>를 클릭해 진행중인 공고 링크를 넣어주세요. 
         </div>
+
         """, unsafe_allow_html=True)
     # 화면을 두 개의 컬럼으로 분할
     left_col, right_col = st.columns(2)
