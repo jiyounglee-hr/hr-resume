@@ -2013,7 +2013,7 @@ elif st.session_state['current_page'] == "evaluation":
         # 제출 버튼
         submitted = st.form_submit_button(
             "면접평가표 제출", 
-            on_click=lambda: submit_status.info("제출중입니다. 잠시만 기다리세요...")
+            on_click=lambda: submit_status.write("제출중입니다. 잠시만 기다리세요...")
         )
         # 빈 공간 추가
         st.markdown("<br>", unsafe_allow_html=True)
@@ -2109,7 +2109,7 @@ elif st.session_state['current_page'] == "evaluation":
                     # 요청 간 간격 추가 (재시도마다 대기 시간 증가)
                     if retry_count > 0:
                         time.sleep(2 * retry_count)  # 재시도마다 2초씩 대기시간 증가
-                        submit_status.info(f"저장 재시도 중... ({retry_count}/{max_retries})")
+                        submit_status.write(f"저장 재시도 중... ({retry_count}/{max_retries})")
                     
                     # API 인증 과정
                     credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict, scope)
