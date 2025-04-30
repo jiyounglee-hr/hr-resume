@@ -836,7 +836,7 @@ if st.session_state['current_page'] == "resume":
 
 기타 정보
 {posting_data['기타정보']}""",
-                    height=300
+                    height=250
                 )
         else:
             st.warning("활성화된 채용공고가 없습니다.")
