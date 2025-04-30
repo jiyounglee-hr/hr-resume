@@ -1755,12 +1755,15 @@ elif st.session_state['current_page'] == "evaluation":
         <h5 style='color: #333333; margin-bottom: 20px;'>
             📝 면접 평가서 제출
         </h5>
+    """, unsafe_allow_html=True)
+    st.markdown("""
         <small style='color: #666666;'>
             회색색으로된 입력칸은 모두 🔖필수 입니다. 본부 및 직무 선택하신 후 면접 평가 내용을 모두 작성해 주세요.
         </small>
-    """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)  
+    
     # 추가 공간 넣기
-    st.markdown("<div style='margin-top:20px;'></div>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
     
     # 본부와 직무 데이터 가져오기
     departments, jobs = get_google_sheet_data()
