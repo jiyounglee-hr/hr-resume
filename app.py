@@ -2009,15 +2009,22 @@ elif st.session_state['current_page'] == "evaluation":
                             <th style="width: 39%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">내용</th>
                             <th style="width: 13%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">점수</th>
                             <th style="width: 30%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">의견</th>
-                        </tr>
-                        {''.join([f"""
+                        </tr>"""
+
+            # 평가 데이터 행을 별도로 생성
+            eval_rows = ""
+            for row in st.session_state.eval_data:
+                row_content = f"""
                         <tr>
                             <td style="border: 1px solid #000; padding: 5px;">{row['구분']}</td>
                             <td style="border: 1px solid #000; padding: 5px;">{', '.join([line.strip() for line in row['내용'].replace('•', '').split('\\n') if line.strip()])}</td>
                             <td style="border: 1px solid #000; padding: 5px; text-align: center;">{row['점수']} / {row['만점']}</td>
                             <td style="border: 1px solid #000; padding: 5px;">{row['의견']}</td>
-                        </tr>
-                        """ for row in st.session_state.eval_data])}
+                        </tr>"""
+                eval_rows += row_content
+
+            # HTML 템플릿 계속
+            html += eval_rows + f"""
                         <tr>
                             <th colspan="2" style="border: 1px solid #000; padding: 5px;">총점</th>
                             <td style="border: 1px solid #000; padding: 5px;">{total_score} / 100</td>
@@ -2376,15 +2383,22 @@ elif st.session_state['current_page'] == "admin":
                                     <th style="width: 39%;">내용</th>
                                     <th style="width: 13%;">점수</th>
                                     <th style="width: 30%;">의견</th>
-                                </tr>
-                                {''.join([f"""
+                                </tr>"""
+
+                    # 평가 데이터 행을 별도로 생성
+                    eval_table_rows = ""
+                    for row in eval_data:
+                        row_content = f"""
                                 <tr>
                                     <td>{row['구분']}</td>
                                     <td>{row['내용']}</td>
                                     <td style="text-align: center;">{row['점수']} / {row['만점']}</td>
                                     <td>{row['의견']}</td>
-                                </tr>
-                                """ for row in eval_data])}
+                                </tr>"""
+                        eval_table_rows += row_content
+
+                    # HTML 템플릿 계속
+                    html_content += eval_table_rows + f"""
                                 <tr>
                                     <th colspan="2">총점</th>
                                     <td style="text-align: center;">{selected_row['총점']} / 100</td>
