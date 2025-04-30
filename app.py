@@ -1925,32 +1925,16 @@ elif st.session_state['current_page'] == "evaluation":
         # 평가표 데이터 입력
         st.markdown("<br><b>평가표 입력</b>", unsafe_allow_html=True)
         
-        # 총점 표시를 위한 컨테이너
-        total_score_container = st.empty()
-        
-        # 총점 계산 함수
-        def calculate_total():
-            current_total = sum(row["점수"] for row in st.session_state.eval_data)
-            total_score_container.markdown(f"""
-                <div style='
-                    background-color: #f0f2f6;
-                    padding: 10px;
-                    border-radius: 5px;
-                    text-align: center;
-                    margin: 10px 0;
-                    font-weight: bold;'>
-                    총점: {current_total} / 100
-                </div>
-            """, unsafe_allow_html=True)
-            return current_total
-
         # 총점 표시를 위한 컨테이너와 점수 계산 버튼을 위한 컬럼
-        score_cols = st.columns([1, 1])
+        score_cols = st.columns([4, 1])
+        
+        # 총점 표시를 위한 컨테이너
+        total_container = score_cols[0].empty()
         
         # 총점 계산 함수
         def calculate_total():
             current_total = sum(row["점수"] for row in st.session_state.eval_data)
-            score_cols[0].markdown(f"""
+            total_container.markdown(f"""
                 <div style='
                     background-color: #f0f2f6;
                     padding: 10px;
@@ -1963,9 +1947,8 @@ elif st.session_state['current_page'] == "evaluation":
             """, unsafe_allow_html=True)
             return current_total
 
-        # 왼쪽 컬럼에 총점 표시
-        with score_cols[0]:
-            calculate_total()
+        # 초기 총점 표시
+        calculate_total()
         
         # 오른쪽 컬럼에 점수 계산 버튼
         with score_cols[1]:
