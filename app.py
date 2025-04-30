@@ -1858,7 +1858,7 @@ elif st.session_state['current_page'] == "evaluation":
         
         # 초기화 버튼 (작은 크기로)
         st.markdown("<div style='padding-top: 25px;'></div>", unsafe_allow_html=True)
-        st.button("🔄 선택 초기화", on_click=reset_session, help="선택 항목을 초기화하고 페이지를 새로고침합니다.")
+        st.button("🔄", on_click=reset_session, help="본부 및 직무 선택을 초기화하고 페이지를 새로고침합니다.")
     
     st.markdown(f"**선택된 본부&직무 :** {selected_dept if selected_dept else '본부 미선택'} / {selected_job if selected_job else '직무 미선택'}")
     # 본부/직무 선택에 따라 템플릿 자동 반영
