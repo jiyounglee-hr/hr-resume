@@ -1987,23 +1987,35 @@ elif st.session_state['current_page'] == "evaluation":
             st.session_state.total_score = total
             return total
         
+        # 점수 합계 계산 및 표시 위한 함수
+        def update_total_score():
+            # 현재 입력 필드의 값을 가져와서 합산
+            current_scores = []
+            for i, row in enumerate(st.session_state.eval_data):
+                # 현재 입력된 점수 값을 가져옴 (number_input의 키 값 사용)
+                score_key = f"score_{i}"
+                if score_key in st.session_state:
+                    current_score = st.session_state[score_key]
+                else:
+                    current_score = row.get("점수", 0) or 0
+                
+                current_scores.append(current_score)
+                # 세션 상태 업데이트
+                st.session_state.eval_data[i]["점수"] = current_score
+            
+            # 현재 점수 합계 계산
+            total = sum(current_scores)
+            st.session_state.total_score = total
+            return total
+        
+        # 초기 계산 실행
+        update_total_score()
+        
         # 점수 합계 표시 섹션
         st.markdown("<br><b>점수 합계</b>", unsafe_allow_html=True)
         total_score_cols = st.columns([1, 3, 1])
         
-        # 세션 상태에 total_score가 없으면 초기화하고 바로 계산
-        if 'total_score' not in st.session_state:
-            update_total_score()
-        
-        with total_score_cols[0]:
-            # 키 값 추가하여 고유한 버튼으로 인식
-            st.form_submit_button(
-                "점수합계 계산",
-                key="calculate_score_btn",
-                on_click=update_total_score,
-                type="primary"
-            )
-        
+        # 합계 표시
         with total_score_cols[1]:
             # 점수 표시 - 현재 계산된 점수 표시
             st.markdown(f"""
@@ -2019,6 +2031,8 @@ elif st.session_state['current_page'] == "evaluation":
                 총점: {st.session_state.total_score} / 100
             </div>
             """, unsafe_allow_html=True)
+            
+            st.caption("점수 입력 시 자동으로 합계가 계산됩니다.")
         
         # 종합의견, 전형결과, 입사가능시기
         st.markdown("<br><b>종합의견 및 결과</b>", unsafe_allow_html=True)
