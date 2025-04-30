@@ -2004,8 +2004,6 @@ elif st.session_state['current_page'] == "evaluation":
             row_data.extend([summary, result, join_date, total_score])
             worksheet.append_row(row_data)
             
-            # 처리 중 메시지 제거
-            progress_message.empty()
             
             # PDF 다운로드 버튼 표시
             import base64
@@ -2177,12 +2175,14 @@ elif st.session_state['current_page'] == "evaluation":
                 except Exception as e:
                     st.error(f"PDF 생성 중 오류가 발생했습니다: {str(e)}")
                     return None
-
+                    
+            # 처리 중 메시지 제거
+            progress_message.empty()
             # PDF 생성 및 다운로드 버튼 표시
             pdf = create_pdf(html)
             if pdf:
                 b64 = base64.b64encode(pdf).decode()
-                col1, col2 = st.columns([2, 1])
+                col1, col2 = st.columns([1, 1])
                 with col1:
                     st.success("제출이 완료되었습니다.")
                 with col2:
