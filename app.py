@@ -1997,15 +1997,11 @@ elif st.session_state['current_page'] == "evaluation":
         
         with total_score_cols[0]:
             # 키 값 추가하여 고유한 버튼으로 인식
-            calc_btn = st.form_submit_button(
+            st.form_submit_button(
                 "점수합계 계산",
                 key="calculate_score_btn",
                 on_click=update_total_score
             )
-            
-            # 버튼 클릭 시 즉시 계산하여 업데이트
-            if calc_btn:
-                update_total_score()
         
         with total_score_cols[1]:
             # 점수 표시 - 현재 계산된 점수 표시
@@ -2019,7 +2015,7 @@ elif st.session_state['current_page'] == "evaluation":
                 font-weight: bold;
                 font-size: 1.2em;
                 text-align: center;'>
-                총점: {update_total_score()} / 100
+                총점: {st.session_state.total_score} / 100
             </div>
             """, unsafe_allow_html=True)
         
