@@ -753,7 +753,7 @@ if st.session_state['current_page'] == "resume":
     st.markdown("###### 🚩 서류전형 절차는 어떻게 되나요?")
         
     st.markdown("""
-        ① 서류접수 및 전달 : 접수된 지원서를 인사팀에서 면접관님께 채용 채팅(팀즈)를 통해 검토 요청을 드립니다. 
+        ① 서류접수 및 전달 : 접수된 지원서를 인사팀에서 채용 채팅(팀즈)를 통해 검토 요청을 드립니다. 
         
         ③ 서류검토 및 회신 : 면접관께서는 서류 검토 결과를 채용 채팅(팀즈)을 통해 회신해주세요. <small style='color: #666666;'>
             (아래 '🤖 AI가 이력서 분석을 도와드려요!'를 활용해 보세요)
@@ -785,7 +785,7 @@ if st.session_state['current_page'] == "resume":
             job_description = st.text_area("채용공고 내용을 입력해주세요", height=300)
         else:
             # 채용공고 링크 입력
-            job_link = st.text_input("채용공고 링크를 입력해주세요. (왼쪽에 뉴로핏 커리어 링크를 클릭해 진행중인 공고 링크를 넣어주세요. )", placeholder="https://career.neurophet.com/...")
+            job_link = st.text_input("채용공고 링크를 입력해주세요. ", placeholder="https://career.neurophet.com/1d29976c-730b-80b6-92b2-d8cd39bfbfd9")
 
             if job_link:
                 try:
