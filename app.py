@@ -1831,29 +1831,9 @@ elif st.session_state['current_page'] == "evaluation":
             selected_job = None
             st.session_state.dept_job_info['selected_job'] = None
     
-    # 오른쪽 컬럼: 초기화 버튼
+    # 오른쪽 컬럼: 여백
     with col3:
-        # 초기화 함수 정의
-        def reset_session_and_reload():
-            # 세션 상태 초기화
-            st.session_state.dept_job_info = {
-                'selected_dept': None,
-                'selected_job': None
-            }
-            if 'eval_dept' in st.session_state:
-                del st.session_state.eval_dept
-            if 'eval_job' in st.session_state:
-                del st.session_state.eval_job
-            if 'eval_data' in st.session_state:
-                st.session_state.eval_data = default_template
-            if 'eval_opinions' in st.session_state:
-                st.session_state.eval_opinions = [''] * len(st.session_state.eval_data)
-            # 페이지 리로드
-            st.rerun()
-        
-        # 초기화 버튼 (작은 크기로)
-        st.markdown("<div style='padding-top: 25px;'></div>", unsafe_allow_html=True)
-        st.button("🔄 초기화", on_click=reset_session_and_reload, help="선택 항목을 초기화하고 페이지를 새로고침합니다.")
+        st.empty()
     
     st.markdown(f"**선택된 본부&직무 :** {selected_dept if selected_dept else '본부 미선택'} / {selected_job if selected_job else '직무 미선택'}")
     # 본부/직무 선택에 따라 템플릿 자동 반영
