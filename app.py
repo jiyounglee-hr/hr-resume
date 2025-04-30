@@ -738,6 +738,38 @@ with st.sidebar:
     else:
         st.session_state.eval_data = default_template
 
+def get_job_postings_from_sheet():
+    try:
+        scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+        credentials_dict = {
+            "type": st.secrets["google_credentials"]["type"],
+            "project_id": st.secrets["google_credentials"]["project_id"],
+            "private_key_id": st.secrets["google_credentials"]["private_key_id"],
+            "private_key": st.secrets["google_credentials"]["private_key"],
+            "client_email": st.secrets["google_credentials"]["client_email"],
+            "client_id": st.secrets["google_credentials"]["client_id"],
+            "auth_uri": st.secrets["google_credentials"]["auth_uri"],
+            "token_uri": st.secrets["google_credentials"]["token_uri"],
+            "auth_provider_x509_cert_url": st.secrets["google_credentials"]["auth_provider_x509_cert_url"],
+            "client_x509_cert_url": st.secrets["google_credentials"]["client_x509_cert_url"]
+        }
+        credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict, scope)
+        gc = gspread.authorize(credentials)
+        
+        # 채용공고 데이터가 있는 시트 ID (기존 시트 사용)
+        sheet_id = st.secrets["google_sheets"]["department_job_sheet_id"]
+        worksheet = gc.open_by_key(sheet_id).worksheet("채용공고")  # 채용공고 시트 사용
+        
+        # 모든 데이터 가져오기
+        data = worksheet.get_all_records()
+        
+        # 채용공고 목록 생성 (직무 - 채용공고 제목 형식)
+        job_postings = {f"{row['직무']} - {row['제목']}": row for row in data if row['활성화'] == 'Y'}
+        
+        return job_postings
+    except Exception as e:
+        st.error(f"채용공고 데이터를 불러오는 중 오류가 발생했습니다: {str(e)}")
+        return {}
 # 채용공고 데이터
 job_descriptions = {}
 
@@ -766,177 +798,56 @@ if st.session_state['current_page'] == "resume":
     st.markdown("###### 🤖 AI가 이력서 분석을 도와드려요!")
     st.markdown("""
         <div style='font-size: 13px; color: #0066cc;'>
-        👈 왼쪽에 이력서를 업데이트(<a href="https://career.neurophet.com/recruit" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, <a href="https://career.neurophet.com/recruit" target="_blank">🔗뉴로핏 커리어 링크</a>를 클릭해 진행중인 공고 링크를 넣어주세요. 
+        👈 왼쪽에 이력서를 업데이트(<a href="https://career.neurophet.com/recruit" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, 채용공고를 선택해주세요. 
         </div>
         """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
+
     # 화면을 두 개의 컬럼으로 분할
     left_col, right_col = st.columns(2)
 
     # 왼쪽 컬럼: 채용공고 선택 및 내용, 경력기간 산정
     with left_col:
-        job_option = st.selectbox(
-            "채용공고 타입 선택",
-            ["링크 입력", "직접 입력"]
-        )
+        # 채용공고 선택
+        job_postings = get_job_postings_from_sheet()
+        
+        if job_postings:
+            options = ["선택"] + list(job_postings.keys())
+            selected_posting = st.selectbox(
+                "채용공고 선택",
+                options=options,
+                format_func=lambda x: x
+            )
+            
+            if selected_posting and selected_posting != "선택":
+                posting_data = job_postings[selected_posting]
+                job_description = st.text_area(
+                    "채용공고 내용",
+                    value=f"""[{posting_data['제목']}]
 
-        job_description = ""  # 여기로 이동
-        if job_option == "직접 입력":
-            job_description = st.text_area("채용공고 내용을 입력해주세요", height=300)
+담당업무
+{posting_data['담당업무']}
+
+필수자격
+{posting_data['필수자격']}
+
+우대사항
+{posting_data['우대사항']}
+
+기타 정보
+{posting_data['기타정보']}""",
+                    height=300
+                )
         else:
-            # 채용공고 링크 입력
-            job_link = st.text_input("채용공고 링크를 입력해주세요. ", placeholder="https://career.neurophet.com/1d29976c-730b-80b6-92b2-d8cd39bfbfd9")
-
-            if job_link:
-                try:
-                    # 웹 브라우저처럼 보이기 위한 헤더 설정
-                    headers = {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
-                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-                        'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-                        'Accept-Encoding': 'gzip, deflate, br',
-                        'Connection': 'keep-alive',
-                        'Upgrade-Insecure-Requests': '1',
-                        'Sec-Fetch-Dest': 'document',
-                        'Sec-Fetch-Mode': 'navigate',
-                        'Sec-Fetch-Site': 'none',
-                        'Sec-Fetch-User': '?1'
-                    }
-                    
-                    # 최대 3번까지 재시도
-                    max_retries = 3
-                    retry_count = 0
-                    while retry_count < max_retries:
-                        try:
-                            # 웹 페이지 가져오기 (타임아웃 30초)
-                            response = requests.get(job_link, headers=headers, timeout=30)
-                            response.raise_for_status()
-                            break  # 성공하면 반복문 종료
-                        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
-                            retry_count += 1
-                            if retry_count == max_retries:
-                                raise  # 최대 재시도 횟수 초과시 예외 발생
-                            st.warning(f"연결 시도 {retry_count}/{max_retries}...")
-                            time.sleep(1)  # 1초 대기 후 재시도
-                    
-                    # 인코딩 설정
-                    response.encoding = 'utf-8'
-                    
-                    # HTML 파싱
-                    soup = BeautifulSoup(response.text, 'html.parser')
-                    
-                    # 채용공고 내용 추출
-                    job_title = soup.find(['h1', 'h2', 'h3'], string=lambda x: x and any(keyword in x.lower() for keyword in ['채용', '모집', '공고', 'job']))
-                    if not job_title:
-                        job_title = soup.find(['h1', 'h2', 'h3'])
-                    
-                    if not job_title:
-                        job_title = "채용공고"
-                    else:
-                        job_title = job_title.get_text(strip=True)
-                    
-                    # 담당업무, 필수자격, 우대사항 추출
-                    job_description = f"[{job_title}]\n"
-                    
-                    # 불필요한 내용 필터링을 위한 패턴
-                    skip_patterns = [
-                        "About us", "Recruit", "Culture", "Benefit", "FAQ",
-                        "개인정보처리방침", "이용약관", "뉴로핏 주식회사", "Copyright",
-                        "All Rights Reserved", "테헤란로", "삼원타워", "+82"
-                    ]
-                    
-                    # 섹션별 내용 저장을 위한 딕셔너리
-                    sections = {
-                        "담당업무": [],
-                        "필수자격": [],
-                        "우대사항": [],
-                        "기타정보": []
-                    }
-                    
-                    # 모든 텍스트 블록 찾기
-                    content_blocks = soup.find_all(['div', 'p', 'ul', 'li', 'section', 'article'])
-                    
-                    current_section = None
-                    for block in content_blocks:
-                        text = block.get_text(strip=True)
-                        
-                        # 빈 텍스트나 불필요한 내용 건너뛰기
-                        if not text or any(pattern in text for pattern in skip_patterns):
-                            continue
-                        
-                        # 섹션 제목 확인
-                        if any(keyword in text for keyword in ['담당 업무', '주요 업무', '업무 내용', '수행 업무', '함께 할 업무']):
-                            current_section = "담당업무"
-                            continue
-                        elif any(keyword in text for keyword in ['자격 요건', '필수 요건', '지원 자격', '자격사항', '이런 역량을 가진 분']):
-                            current_section = "필수자격"
-                            continue
-                        elif any(keyword in text for keyword in ['우대사항', '우대 사항', '우대 조건', '이런 경험이 있다면']):
-                            current_section = "우대사항"
-                            continue
-                        elif any(keyword in text for keyword in ['기타', '복리후생', '근무조건', '근무 환경', '합류 여정', '꼭 확인해주세요']):
-                            current_section = "기타정보"
-                            continue
-                        
-                        # 현재 섹션에 내용 추가
-                        if current_section:
-                            # 불필요한 문자 제거
-                            text = text.replace("•", "").replace("·", "").replace("-", "").strip()
-                            if text and len(text) > 1:  # 빈 항목이나 단일 문자 제외
-                                # 중복 체크 후 추가
-                                if text not in sections[current_section]:
-                                    sections[current_section].append(text)
-                    
-                    # 섹션이 비어있는 경우 대체 방법으로 내용 추출
-                    if all(len(section) == 0 for section in sections.values()):
-                        # 모든 텍스트 내용을 추출
-                        all_text = soup.get_text(separator='\n', strip=True)
-                        job_description = f"[{job_title}]\n\n{all_text}"
-                    else:
-                        # 정리된 내용을 job_description에 추가
-                        if sections["담당업무"]:
-                            job_description += "\n담당업무\n"
-                            for item in sections["담당업무"]:
-                                job_description += f"- {item}\n"
-                        
-                        if sections["필수자격"]:
-                            job_description += "\n필수자격\n"
-                            for item in sections["필수자격"]:
-                                job_description += f"- {item}\n"
-                        
-                        if sections["우대사항"]:
-                            job_description += "\n우대사항\n"
-                            for item in sections["우대사항"]:
-                                job_description += f"- {item}\n"
-                        
-                        if sections["기타정보"]:
-                            job_description += "\n기타 정보\n"
-                            for item in sections["기타정보"]:
-                                job_description += f"- {item}\n"
-                    
-                    # 채용공고 내용이 비어있는 경우 처리
-                    if not job_description.strip():
-                        raise ValueError("채용공고 내용을 찾을 수 없습니다. 링크를 확인해주세요.")
-                    
-                    # 채용공고 내용 표시
-                    st.text_area("채용공고 내용", job_description, height=300)
-                    
-                except ValueError as ve:
-                    st.error(str(ve))
-                    job_description = ""
-                except requests.exceptions.RequestException as e:
-                    st.error(f"채용공고를 가져오는 중 네트워크 오류가 발생했습니다: {str(e)}")
-                    job_description = ""
-                except Exception as e:
-                    st.error(f"채용공고를 가져오는 중 오류가 발생했습니다: {str(e)}")
-                    job_description = ""
-            else:
-                job_description = ""
+            st.warning("활성화된 채용공고가 없습니다.")
+            job_description = st.text_area("채용공고 내용을 입력해주세요", height=300)
+    with left_col:
         experience_text = st.text_area(
             "- 경력기간 입력 (AI분석의 경력기간 산정이 잘못된 경우 활용해 보세요.)",  
             height=120,
             placeholder="ℹ️ YYYY-MM ~ YYYY-MM 형식으로 입력하시고 한 줄씩 입력하면 총 경력과 함께 자동으로 정리됩니다."
         )
+
         if experience_text:
             try:
                 result, total_years, total_remaining_months, total_decimal_years = calculate_experience(experience_text)
@@ -1183,155 +1094,51 @@ elif st.session_state['current_page'] == "interview1":
     """, unsafe_allow_html=True)  
     left_space, button_col = st.columns([0.1, 0.9])
     with button_col:
-        st.button("📝 면접 평가서 제출", key="btn_eval_submit", on_click=switch_to_evaluation, type="primary")
+        st.button("📝 면접 평가서 제출", key="btn_eval_submit", on_click=switch_to_evaluation)
     st.markdown("---")
     st.markdown("###### 🤖 AI가 면접질문을 뽑아 드려요.")
     st.markdown("""
         <div style='font-size: 13px; color: #0066cc;'>
-        👈 왼쪽에 이력서를 업데이트(<a href="https://career.neurophet.com/recruit" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, <a href="https://career.neurophet.com/recruit" target="_blank">🔗뉴로핏 커리어 링크</a>를 클릭해 진행중인 공고 링크를 넣어주세요. 
+        👈 왼쪽에 이력서를 업데이트(<a href="https://career.neurophet.com/recruit" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, 채용공고를 선택해주세요. 
         </div>
         """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
-    # 채용공고 링크 입력
-    job_link = st.text_input("채용공고 링크를 입력해주세요.", placeholder="https://career.neurophet.com/1d29976c-730b-80b6-92b2-d8cd39bfbfd9")
+
+    # 채용공고 선택
+    job_postings = get_job_postings_from_sheet()
     
-    if job_link:
-        try:
-            # 웹 브라우저처럼 보이기 위한 헤더 설정
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-                'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'Connection': 'keep-alive',
-                'Upgrade-Insecure-Requests': '1',
-                'Sec-Fetch-Dest': 'document',
-                'Sec-Fetch-Mode': 'navigate',
-                'Sec-Fetch-Site': 'none',
-                'Sec-Fetch-User': '?1'
-            }
-            
-            # 최대 3번까지 재시도
-            max_retries = 3
-            retry_count = 0
-            while retry_count < max_retries:
-                try:
-                    # 웹 페이지 가져오기 (타임아웃 30초)
-                    response = requests.get(job_link, headers=headers, timeout=30)
-                    response.raise_for_status()
-                    break  # 성공하면 반복문 종료
-                except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
-                    retry_count += 1
-                    if retry_count == max_retries:
-                        raise  # 최대 재시도 횟수 초과시 예외 발생
-                    st.warning(f"연결 시도 {retry_count}/{max_retries}...")
-                    time.sleep(1)  # 1초 대기 후 재시도
-            
-            # 인코딩 설정
-            response.encoding = 'utf-8'
-            
-            # HTML 파싱
-            soup = BeautifulSoup(response.text, 'lxml')
-            
-            # 채용공고 내용 추출
-            job_title = soup.find('h1')
-            if not job_title:
-                raise ValueError("채용공고 제목을 찾을 수 없습니다.")
-            job_title = job_title.get_text(strip=True)
-            
-            # 담당업무, 필수자격, 우대사항 추출
-            job_description = f"[{job_title}]\n"
-            
-            # 불필요한 내용 필터링을 위한 패턴
-            skip_patterns = [
-                "About us", "Recruit", "Culture", "Benefit", "FAQ",
-                "개인정보처리방침", "이용약관", "뉴로핏 주식회사", "Copyright",
-                "All Rights Reserved", "테헤란로", "삼원타워", "+82"
-            ]
-            
-            # 섹션별 내용 저장을 위한 딕셔너리
-            sections = {
-                "담당업무": [],
-                "필수자격": [],
-                "우대사항": [],
-                "기타정보": []
-            }
-            
-            # 모든 텍스트 블록 찾기
-            content_blocks = soup.find_all(['h2', 'h3', 'h4', 'div', 'p', 'ul', 'li'])
-            
-            current_section = None
-            for block in content_blocks:
-                text = block.get_text(strip=True)
-                
-                # 빈 텍스트나 불필요한 내용 건너뛰기
-                if not text or any(pattern in text for pattern in skip_patterns):
-                    continue
-                
-                # 섹션 제목 확인
-                if "함께 할 업무" in text:
-                    current_section = "담당업무"
-                    continue
-                elif "역량을 가진 분" in text or "이런 분을 찾" in text:
-                    current_section = "필수자격"
-                    continue
-                elif "경험이 있다면 더 좋" in text or "우대" in text:
-                    current_section = "우대사항"
-                    continue
-                elif "합류 여정" in text or "꼭 확인해주세요" in text:
-                    current_section = "기타정보"
-                    continue
-                
-                # 현재 섹션에 내용 추가
-                if current_section:
-                    # 불필요한 문자 제거
-                    text = text.replace("•", "").strip()
-                    if text and len(text) > 1:  # 빈 항목이나 단일 문자 제외
-                        # 중복 체크 후 추가
-                        if text not in sections[current_section]:
-                            sections[current_section].append(text)
-            
-            # 정리된 내용을 job_description에 추가
-            if sections["담당업무"]:
-                job_description += "\n담당업무\n"
-                for item in sections["담당업무"]:
-                    job_description += f"- {item}\n"
-            
-            if sections["필수자격"]:
-                job_description += "\n필수자격\n"
-                for item in sections["필수자격"]:
-                    job_description += f"- {item}\n"
-            
-            if sections["우대사항"]:
-                job_description += "\n우대사항\n"
-                for item in sections["우대사항"]:
-                    job_description += f"- {item}\n"
-            
-            if sections["기타정보"]:
-                job_description += "\n기타 정보\n"
-                for item in sections["기타정보"]:
-                    if "근무" in item or "급여" in item or "제출" in item:
-                        job_description += f"- {item}\n"
-            
-            # 채용공고 내용이 비어있는 경우 처리
-            if not job_description.strip():
-                raise ValueError("채용공고 내용을 찾을 수 없습니다. 링크를 확인해주세요.")
-            
-            # 채용공고 내용 표시
-            st.text_area("채용공고 내용", job_description, height=300)
-            
-        except ValueError as ve:
-            st.error(str(ve))
-            job_description = ""
-        except requests.exceptions.RequestException as e:
-            st.error(f"채용공고를 가져오는 중 네트워크 오류가 발생했습니다: {str(e)}")
-            job_description = ""
-        except Exception as e:
-            st.error(f"채용공고를 가져오는 중 오류가 발생했습니다: {str(e)}")
-            job_description = ""
+    if job_postings:
+        options = ["선택"] + list(job_postings.keys())
+        selected_posting = st.selectbox(
+            "채용공고 선택",
+            options=options,
+            format_func=lambda x: x,
+            key="interview1_posting"
+        )
+        
+        if selected_posting and selected_posting != "선택":
+            posting_data = job_postings[selected_posting]
+            job_description = st.text_area(
+                "채용공고 내용",
+                value=f"""[{posting_data['제목']}]
+
+담당업무
+{posting_data['담당업무']}
+
+필수자격
+{posting_data['필수자격']}
+
+우대사항
+{posting_data['우대사항']}
+
+기타 정보
+{posting_data['기타정보']}""",
+                height=300
+            )
     else:
-        job_description = ""
- 
+        st.warning("활성화된 채용공고가 없습니다.")
+        job_description = st.text_area("채용공고 내용을 입력해주세요", height=300)
+
     # 질문 추출 버튼을 왼쪽에 배치
     col1, col2 = st.columns([1, 4])
     with col1:
@@ -1503,149 +1310,46 @@ elif st.session_state['current_page'] == "interview2":
     st.markdown("###### 🤖 AI가 면접질문을 뽑아 드려요.")
     st.markdown("""
         <div style='font-size: 13px; color: #0066cc;'>
-        👈 왼쪽에 이력서를 업데이트(<a href="https://career.neurophet.com/recruit" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, <a href="https://career.neurophet.com/recruit" target="_blank">🔗뉴로핏 커리어 링크</a>를 클릭해 진행중인 공고 링크를 넣어주세요. 
+        👈 왼쪽에 이력서를 업데이트(<a href="https://career.neurophet.com/recruit" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, 채용공고를 선택해주세요. 
         </div>
         """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
-    job_link = st.text_input("채용공고 링크를 입력해주세요.", placeholder="https://career.neurophet.com/1d29976c-730b-80b6-92b2-d8cd39bfbfd9")
+
+    # 채용공고 선택
+    job_postings = get_job_postings_from_sheet()
     
-    if job_link:
-        try:
-            # 웹 브라우저처럼 보이기 위한 헤더 설정
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-                'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'Connection': 'keep-alive',
-                'Upgrade-Insecure-Requests': '1',
-                'Sec-Fetch-Dest': 'document',
-                'Sec-Fetch-Mode': 'navigate',
-                'Sec-Fetch-Site': 'none',
-                'Sec-Fetch-User': '?1'
-            }
-            
-            # 최대 3번까지 재시도
-            max_retries = 3
-            retry_count = 0
-            while retry_count < max_retries:
-                try:
-                    # 웹 페이지 가져오기 (타임아웃 30초)
-                    response = requests.get(job_link, headers=headers, timeout=30)
-                    response.raise_for_status()
-                    break  # 성공하면 반복문 종료
-                except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
-                    retry_count += 1
-                    if retry_count == max_retries:
-                        raise  # 최대 재시도 횟수 초과시 예외 발생
-                    st.warning(f"연결 시도 {retry_count}/{max_retries}...")
-                    time.sleep(1)  # 1초 대기 후 재시도
-            
-            # 인코딩 설정
-            response.encoding = 'utf-8'
-            
-            # HTML 파싱
-            soup = BeautifulSoup(response.text, 'lxml')
-            
-            # 채용공고 내용 추출
-            job_title = soup.find('h1')
-            if not job_title:
-                raise ValueError("채용공고 제목을 찾을 수 없습니다.")
-            job_title = job_title.get_text(strip=True)
-            
-            # 담당업무, 필수자격, 우대사항 추출
-            job_description = f"[{job_title}]\n"
-            
-            # 불필요한 내용 필터링을 위한 패턴
-            skip_patterns = [
-                "About us", "Recruit", "Culture", "Benefit", "FAQ",
-                "개인정보처리방침", "이용약관", "뉴로핏 주식회사", "Copyright",
-                "All Rights Reserved", "테헤란로", "삼원타워", "+82"
-            ]
-            
-            # 섹션별 내용 저장을 위한 딕셔너리
-            sections = {
-                "담당업무": [],
-                "필수자격": [],
-                "우대사항": [],
-                "기타정보": []
-            }
-            
-            # 모든 텍스트 블록 찾기
-            content_blocks = soup.find_all(['h2', 'h3', 'h4', 'div', 'p', 'ul', 'li'])
-            
-            current_section = None
-            for block in content_blocks:
-                text = block.get_text(strip=True)
-                
-                # 빈 텍스트나 불필요한 내용 건너뛰기
-                if not text or any(pattern in text for pattern in skip_patterns):
-                    continue
-                
-                # 섹션 제목 확인
-                if "함께 할 업무" in text:
-                    current_section = "담당업무"
-                    continue
-                elif "역량을 가진 분" in text or "이런 분을 찾" in text:
-                    current_section = "필수자격"
-                    continue
-                elif "경험이 있다면 더 좋" in text or "우대" in text:
-                    current_section = "우대사항"
-                    continue
-                elif "합류 여정" in text or "꼭 확인해주세요" in text:
-                    current_section = "기타정보"
-                    continue
-                
-                # 현재 섹션에 내용 추가
-                if current_section:
-                    # 불필요한 문자 제거
-                    text = text.replace("•", "").strip()
-                    if text and len(text) > 1:  # 빈 항목이나 단일 문자 제외
-                        # 중복 체크 후 추가
-                        if text not in sections[current_section]:
-                            sections[current_section].append(text)
-            
-            # 정리된 내용을 job_description에 추가
-            if sections["담당업무"]:
-                job_description += "\n담당업무\n"
-                for item in sections["담당업무"]:
-                    job_description += f"- {item}\n"
-            
-            if sections["필수자격"]:
-                job_description += "\n필수자격\n"
-                for item in sections["필수자격"]:
-                    job_description += f"- {item}\n"
-            
-            if sections["우대사항"]:
-                job_description += "\n우대사항\n"
-                for item in sections["우대사항"]:
-                    job_description += f"- {item}\n"
-            
-            if sections["기타정보"]:
-                job_description += "\n기타 정보\n"
-                for item in sections["기타정보"]:
-                    if "근무" in item or "급여" in item or "제출" in item:
-                        job_description += f"- {item}\n"
-            
-            # 채용공고 내용이 비어있는 경우 처리
-            if not job_description.strip():
-                raise ValueError("채용공고 내용을 찾을 수 없습니다. 링크를 확인해주세요.")
-            
-            # 채용공고 내용 표시
-            st.text_area("채용공고 내용", job_description, height=300)
-            
-        except ValueError as ve:
-            st.error(str(ve))
-            job_description = ""
-        except requests.exceptions.RequestException as e:
-            st.error(f"채용공고를 가져오는 중 네트워크 오류가 발생했습니다: {str(e)}")
-            job_description = ""
-        except Exception as e:
-            st.error(f"채용공고를 가져오는 중 오류가 발생했습니다: {str(e)}")
-            job_description = ""
+    if job_postings:
+        options = ["선택"] + list(job_postings.keys())
+        selected_posting = st.selectbox(
+            "채용공고 선택",
+            options=options,
+            format_func=lambda x: x,
+            key="interview2_posting"
+        )
+        
+        if selected_posting and selected_posting != "선택":
+            posting_data = job_postings[selected_posting]
+            job_description = st.text_area(
+                "채용공고 내용",
+                value=f"""[{posting_data['제목']}]
+
+담당업무
+{posting_data['담당업무']}
+
+필수자격
+{posting_data['필수자격']}
+
+우대사항
+{posting_data['우대사항']}
+
+기타 정보
+{posting_data['기타정보']}""",
+                height=300
+            )
     else:
-        job_description = ""
-    
+        st.warning("활성화된 채용공고가 없습니다.")
+        job_description = st.text_area("채용공고 내용을 입력해주세요", height=300)
+
     # 질문 추출 버튼을 왼쪽에 배치
     col1, col2 = st.columns([1, 4])
     with col1:
@@ -1654,7 +1358,14 @@ elif st.session_state['current_page'] == "interview2":
             key="question_button2",
             help="분석 결과를 바탕으로 면접 질문을 생성합니다"
         )
+    st.markdown("""
+        <small style='color: #666666;'>
+            AI를 통해 업무 지식 및 직무기술 직무 수행 태도 및 자세 관련 질문을 추출합니다. <br>
+            인상, 태도, 복장 등 전반적인 기본자세는 잘 관찰해주시고, 경력자의 경우 이직사유에 대해서도 체크부탁드립니다. 
+        </small>
+    """, unsafe_allow_html=True)  
 
+    
     # 질문 생성 로직
     if question_button:
         if uploaded_file and job_description:
@@ -2004,7 +1715,7 @@ elif st.session_state['current_page'] == "evaluation":
                 st.markdown("<br>", unsafe_allow_html=True)
 
         # 총점 표시를 위한 컨테이너와 점수 계산 버튼을 위한 컬럼
-        score_cols = st.columns([6.5, 0.5])
+        score_cols = st.columns([6, 0.5])
         
         # 총점 표시를 위한 컨테이너
         total_container = score_cols[0].empty()
@@ -2714,3 +2425,9 @@ elif st.session_state['current_page'] == "admin":
                 st.info("저장된 면접평가 데이터가 없습니다.")
         except Exception as e:
             st.error(f"데이터를 불러오는 중 오류가 발생했습니다: {str(e)}")
+                    
+st.markdown('<div class="label-text"><a href="https://docs.google.com/spreadsheets/d/1zwYJ2hwneCeSgd6p4s9ngll8PDmhLhq9qOTRo5SLCz8/edit?gid=0#gid=0" target="_blank" class="web-link">🔗 면접평가서 DB </a></div>', unsafe_allow_html=True)
+st.markdown('<div class="label-text"><a href="https://docs.google.com/spreadsheets/d/1SfVtvaHgXesDFtdFozt9CJD8aQpPBrK76AxNj-OOfFE/edit?gid=2080076349#gid=2080076349" target="_blank" class="web-link">🔗채용공고 DB</a></div>', unsafe_allow_html=True)
+st.markdown('<div class="label-text"><a href="https://docs.google.com/spreadsheets/d/1SfVtvaHgXesDFtdFozt9CJD8aQpPBrK76AxNj-OOfFE/edit?gid=0#gid=0" target="_blank" class="web-link">🔗직무기술서 DB</a></div>', unsafe_allow_html=True)
+
+                    
