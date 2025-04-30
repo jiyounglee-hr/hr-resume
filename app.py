@@ -2202,8 +2202,8 @@ elif st.session_state['current_page'] == "evaluation":
                         </tr>"""
 
                 # 평가 데이터 행을 별도로 생성
-                eval_rows = ""
-                for row in st.session_state.eval_data:
+            eval_rows = ""
+            for row in st.session_state.eval_data:
                     # 줄바꿈 분할을 f-string 외부에서 처리
                     content_parts = []
                     for line in row['내용'].replace('•', '').split('\n'):
