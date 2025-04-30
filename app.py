@@ -2220,8 +2220,8 @@ elif st.session_state['current_page'] == "evaluation":
                             </tr>"""
                     eval_rows += row_content
 
-                # HTML 템플릿 계속
-                html += eval_rows + f"""
+            # HTML 템플릿 계속
+            html += eval_rows + f"""
                             <tr>
                                 <th colspan="2" style="border: 1px solid #000; padding: 5px;">총점</th>
                                 <td style="border: 1px solid #000; padding: 5px;">{total_score} / 100</td>
