@@ -1925,6 +1925,9 @@ elif st.session_state['current_page'] == "evaluation":
         # 평가표 데이터 입력
         st.markdown("<br><b>평가표 입력</b>", unsafe_allow_html=True)
         
+        # 총점 표시를 위한 컨테이너
+        total_score_container = st.empty()
+        
         for i, row in enumerate(st.session_state.eval_data):
             # 컬럼 비율 조정 (1:2:1:3:0.5)으로 변경
             cols = st.columns([1, 2, 1, 3, 0.5])
@@ -1965,6 +1968,20 @@ elif st.session_state['current_page'] == "evaluation":
             # 구분이 끝날 때마다 한 줄 띄우기
             if i < len(st.session_state.eval_data) - 1 and row["구분"] != st.session_state.eval_data[i + 1]["구분"]:
                 st.markdown("<br>", unsafe_allow_html=True)
+        
+        # 총점 계산 및 표시
+        current_total = sum(row["점수"] for row in st.session_state.eval_data)
+        total_score_container.markdown(f"""
+            <div style='
+                background-color: #f0f2f6;
+                padding: 10px;
+                border-radius: 5px;
+                text-align: center;
+                margin: 10px 0;
+                font-weight: bold;'>
+                총점: {current_total} / 100
+            </div>
+        """, unsafe_allow_html=True)
         
         # 종합의견, 전형결과, 입사가능시기
         st.markdown("<br><b>종합의견 및 결과</b>", unsafe_allow_html=True)
@@ -2311,7 +2328,7 @@ elif st.session_state['current_page'] == "evaluation":
                     b64 = base64.b64encode(pdf).decode()
                     col1, col2 = st.columns([1, 1])
                     with col1:
-                        st.success("제출이 완료되었습니다.")
+                        st.success("PDF생성이 완료되었습니다.")
                     with col2:
                         st.markdown(
                             f'<a href="data:application/pdf;base64,{b64}" download="면접평가표.pdf" '
