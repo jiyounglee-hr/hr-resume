@@ -1473,7 +1473,7 @@ elif st.session_state['current_page'] == "interview2":
         - 합격자: 인사팀이 연봉협상 및 입사 일정을 안내합니다.<br>
         - 불합격자: 인사팀에서 이메일을 통해 개별 통보합니다.
         """, unsafe_allow_html=True)
-        
+
     st.markdown("---")
     # 채용공고 링크 입력   
     st.markdown("###### 🤖 AI가 면접질문을 뽑아 드려요.")
@@ -1726,6 +1726,7 @@ elif st.session_state['current_page'] == "interview2":
         </small>
     """, unsafe_allow_html=True)  
     st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("---")
     st.markdown("###### 📒 2차 면접 순서")
     st.markdown("""
     1. <b>면접관 사전 미팅</b><br> 면접 시작 10분 전, 면접관 간 진행 방식 및 역할 분담 등을 간단히 조율합니다.
