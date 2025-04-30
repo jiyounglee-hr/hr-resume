@@ -2024,7 +2024,7 @@ elif st.session_state['current_page'] == "evaluation":
                 </div>
                 <p><b>ㆍ후보자 정보 </b></p>
                 <div style="margin-bottom: 15px;">
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; table-layout: fixed;">
                         <tr>
                             <th style="width: 20%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">후보자명</th>
                             <td style="width: 15%; border: 1px solid #000; padding: 5px;">{candidate_name}</td>
@@ -2041,7 +2041,7 @@ elif st.session_state['current_page'] == "evaluation":
                 </div>
                 <p><br><br><b>ㆍ평가내용</b></p>      
                 <div style="margin-bottom: 15px;">
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; table-layout: fixed;">
                         <tr>
                             <th style="width: 18%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">평가구분</th>
                             <th style="width: 39%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">내용</th>
@@ -2081,7 +2081,7 @@ elif st.session_state['current_page'] == "evaluation":
                 <p><br><br><b>ㆍ종합의견 및 결과</b></p>      
     
                 <div style="margin-bottom: 15px;">
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; table-layout: fixed;">
                         <tr>
                             <th style="width: 15%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">종합의견</th>
                             <td colspan="3" style="border: 1px solid #000; padding: 5px;">{summary}</td>
@@ -2119,12 +2119,15 @@ elif st.session_state['current_page'] == "evaluation":
                                 width: 100%;
                                 border-collapse: collapse;
                                 margin-bottom: 10px;
+                                table-layout: fixed;
                             }}
                             th, td {{
                                 border: 1px solid black;
                                 padding: 8px;
                                 text-align: left;
                                 font-family: 'Noto Sans KR', sans-serif !important;
+                                word-wrap: break-word;
+                                overflow-wrap: break-word;
                             }}
                             th {{
                                 background-color: #f2f2f2;
@@ -2134,6 +2137,10 @@ elif st.session_state['current_page'] == "evaluation":
                             }}
                             .content-item {{
                                 margin-bottom: 8px;
+                            }}
+                            .empty-cell {{
+                                min-height: 1.5em;
+                                display: block;
                             }}
                         </style>
                     </head>
@@ -2394,37 +2401,37 @@ elif st.session_state['current_page'] == "admin":
                             <h2 style="font-size: 18px; margin-bottom: 5px;"> 면접평가표</h2>
                             <p><b>본부:</b> {selected_row['본부']} / <b>직무:</b> {selected_row['직무']}</p>
                             <div class="section-title"><p><br><b>ㆍ후보자 정보</b></p></div>
-                            <table>
+                            <table style="table-layout: fixed;">
                                 <tr>
                                     <th style="width: 20%;">후보자명</th>
-                                    <td style="width: 30%;">{selected_row['후보자명']}</td>
+                                    <td style="width: 30%;">{selected_row['후보자명'] or ''}</td>
                                     <th style="width: 20%;">면접관성명</th>
-                                    <td style="width: 30%;">{selected_row['면접관성명']}</td>
+                                    <td style="width: 30%;">{selected_row['면접관성명'] or ''}</td>
                                 </tr>
                                 <tr>
                                     <th>면접일자</th>
-                                    <td>{selected_row['면접일자']}</td>
+                                    <td>{selected_row['면접일자'] or ''}</td>
                                     <th>최종학교/전공</th>
-                                    <td>{selected_row['최종학교/전공']}</td>
+                                    <td>{selected_row['최종학교/전공'] or ''}</td>
                                 </tr>
                             </table>
 
                             <div class="section-title"><p><br><b>ㆍ종합의견 및 결과</b></p></div>
-                            <table>
+                            <table style="table-layout: fixed;">
                                 <tr>
                                     <th style="width: 15%;">종합의견</th>
-                                    <td colspan="3">{selected_row['종합의견']}</td>
+                                    <td colspan="3">{selected_row['종합의견'] or ''}</td>
                                 </tr>
                                 <tr>
                                     <th>면접결과</th>
-                                    <td style="width: 20%;">{selected_row['면접결과']}</td>
+                                    <td style="width: 20%;">{selected_row['면접결과'] or ''}</td>
                                     <th style="width: 15%;">총점</th>
-                                    <td style="width: 35%;">{selected_row['총점']}</td>
+                                    <td style="width: 35%;">{selected_row['총점'] or ''}</td>
                                 </tr>
                             </table>
 
                             <div class="section-title"><p><br><b>ㆍ평가내용</b></p></div>
-                            <table>
+                            <table style="table-layout: fixed;">
                                 <tr>
                                     <th style="width: 18%;">평가구분</th>
                                     <th style="width: 39%;">내용</th>
@@ -2441,9 +2448,9 @@ elif st.session_state['current_page'] == "admin":
                         row_content = f"""
                                 <tr>
                                     <td>{row['구분']}</td>
-                                    <td>{content}</td>
-                                    <td style="text-align: center;">{row['점수']} / {row['만점']}</td>
-                                    <td>{row['의견']}</td>
+                                    <td>{content or ''}</td>
+                                    <td style="text-align: center;">{row['점수'] if row['점수'] else '0'} / {row['만점']}</td>
+                                    <td>{row['의견'] or ''}</td>
                                 </tr>"""
                         eval_table_rows += row_content
 
@@ -2451,7 +2458,7 @@ elif st.session_state['current_page'] == "admin":
                     html_content += eval_table_rows + f"""
                                 <tr>
                                     <th colspan="2">총점</th>
-                                    <td style="text-align: center;">{selected_row['총점']} / 100</td>
+                                    <td style="text-align: center;">{selected_row['총점'] or '0'} / 100</td>
                                     <td>-</td>
                                 </tr>
                             </table>
