@@ -1858,7 +1858,7 @@ elif st.session_state['current_page'] == "evaluation":
         
         # 초기화 버튼 (작은 크기로)
         st.markdown("<div style='padding-top: 25px;'></div>", unsafe_allow_html=True)
-        st.button("🔄 초기화", on_click=reset_session, help="선택 항목을 초기화하고 페이지를 새로고침합니다.")
+        st.button("🔄 선택 초기화", on_click=reset_session, help="선택 항목을 초기화하고 페이지를 새로고침합니다.")
     
     st.markdown(f"**선택된 본부&직무 :** {selected_dept if selected_dept else '본부 미선택'} / {selected_job if selected_job else '직무 미선택'}")
     # 본부/직무 선택에 따라 템플릿 자동 반영
@@ -1966,6 +1966,38 @@ elif st.session_state['current_page'] == "evaluation":
             if i < len(st.session_state.eval_data) - 1 and row["구분"] != st.session_state.eval_data[i + 1]["구분"]:
                 st.markdown("<br>", unsafe_allow_html=True)
 
+        # 점수 합계 계산 및 표시 위한 함수
+        def update_total_score():
+            total = sum([row["점수"] for row in st.session_state.eval_data])
+            st.session_state.total_score = total
+            return total
+        
+        # 점수 합계 표시 섹션
+        st.markdown("<br><b>점수 합계</b>", unsafe_allow_html=True)
+        total_score_cols = st.columns([1, 3, 1])
+        
+        # 세션 상태에 total_score가 없으면 초기화
+        if 'total_score' not in st.session_state:
+            st.session_state.total_score = sum([row["점수"] for row in st.session_state.eval_data])
+            
+        with total_score_cols[0]:
+            st.button("점수합계 계산", on_click=update_total_score, type="primary")
+        
+        with total_score_cols[1]:
+            st.markdown(f"""
+            <div style='
+                background-color: #f8f9fa; 
+                padding: 10px; 
+                border-radius: 5px; 
+                border: 1px solid #ddd; 
+                margin-top: 5px;
+                font-weight: bold;
+                font-size: 1.2em;
+                text-align: center;'>
+                총점: {st.session_state.total_score} / 100
+            </div>
+            """, unsafe_allow_html=True)
+        
         # 종합의견, 전형결과, 입사가능시기
         st.markdown("<br><b>종합의견 및 결과</b>", unsafe_allow_html=True)
         summary = st.text_area("종합의견", key="summary", label_visibility="visible")
@@ -1973,7 +2005,7 @@ elif st.session_state['current_page'] == "evaluation":
         join_date = st.text_input("입사가능시기", key="join_date", label_visibility="visible")
 
         # 총점 계산
-        total_score = sum([row["점수"] for row in st.session_state.eval_data])
+        total_score = st.session_state.total_score
 
         # 제출 상태 표시를 위한 컨테이너 추가
         submit_status = st.empty()
