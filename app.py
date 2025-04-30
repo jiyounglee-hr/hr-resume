@@ -2014,10 +2014,17 @@ elif st.session_state['current_page'] == "evaluation":
             # 평가 데이터 행을 별도로 생성
             eval_rows = ""
             for row in st.session_state.eval_data:
+                # 줄바꿈 분할을 f-string 외부에서 처리
+                content_parts = []
+                for line in row['내용'].replace('•', '').split('\n'):
+                    if line.strip():
+                        content_parts.append(line.strip())
+                content_str = ', '.join(content_parts)
+                
                 row_content = f"""
                         <tr>
                             <td style="border: 1px solid #000; padding: 5px;">{row['구분']}</td>
-                            <td style="border: 1px solid #000; padding: 5px;">{', '.join([line.strip() for line in row['내용'].replace('•', '').split('\\n') if line.strip()])}</td>
+                            <td style="border: 1px solid #000; padding: 5px;">{content_str}</td>
                             <td style="border: 1px solid #000; padding: 5px; text-align: center;">{row['점수']} / {row['만점']}</td>
                             <td style="border: 1px solid #000; padding: 5px;">{row['의견']}</td>
                         </tr>"""
@@ -2388,10 +2395,13 @@ elif st.session_state['current_page'] == "admin":
                     # 평가 데이터 행을 별도로 생성
                     eval_table_rows = ""
                     for row in eval_data:
+                        # 내용에 백슬래시가 있는 경우 처리
+                        content = str(row['내용'])
+                        
                         row_content = f"""
                                 <tr>
                                     <td>{row['구분']}</td>
-                                    <td>{row['내용']}</td>
+                                    <td>{content}</td>
                                     <td style="text-align: center;">{row['점수']} / {row['만점']}</td>
                                     <td>{row['의견']}</td>
                                 </tr>"""
