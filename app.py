@@ -2249,7 +2249,7 @@ elif st.session_state['current_page'] == "evaluation":
                 </div>
                 """
 
-                def create_pdf(html_content):
+            def create_pdf(html_content):
                     try:
                         # HTML 템플릿에 한글 웹폰트 추가
                         html_with_font = f'''
@@ -2336,10 +2336,10 @@ elif st.session_state['current_page'] == "evaluation":
                         return None
                         
                 # 처리 중 메시지 제거
-                submit_status.empty()
+            submit_status.empty()
                 # PDF 생성 및 다운로드 버튼 표시
-                pdf = create_pdf(html)
-                if pdf:
+            pdf = create_pdf(html)
+            if pdf:
                     b64 = base64.b64encode(pdf).decode()
                     col1, col2 = st.columns([1, 1])
                     with col1:
@@ -2354,10 +2354,10 @@ elif st.session_state['current_page'] == "evaluation":
                             f'📥 PDF 다운로드</a>',
                             unsafe_allow_html=True
                         )
-                else:
+            else:
                     st.error("PDF 생성 중 오류가 발생했습니다. 인사팀에 문의해주세요.")
                 
-            except Exception as e:
+        except Exception as e:
                 st.error(f"저장 중 오류: 인사팀에 문의해주세요! {str(e)}")
 
         except Exception as e:
