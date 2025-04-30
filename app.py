@@ -1947,7 +1947,8 @@ elif st.session_state['current_page'] == "evaluation":
         # 점수 계산 버튼과 총점 표시를 위한 컬럼
         score_cols = st.columns([3, 1])
         with score_cols[1]:
-            if st.button("점수 계산", type="primary"):
+            calc_score = st.form_submit_button("점수 계산", type="primary")
+            if calc_score:
                 total_score = calculate_total()
         
         for i, row in enumerate(st.session_state.eval_data):
