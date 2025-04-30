@@ -1944,10 +1944,16 @@ elif st.session_state['current_page'] == "evaluation":
 
         # 제출 버튼
         submitted = st.form_submit_button("면접평가표 제출")
+        # 빈 공간 추가
+        st.markdown("<br>", unsafe_allow_html=True)
     
     # Form 제출 처리
     if submitted:
         try:
+            # 처리 중 메시지 표시
+            progress_message = st.empty()
+            progress_message.info("제출중입니다. 잠시만 기다리세요...")
+            
             # 후보자 정보 세션 상태 업데이트
             st.session_state.candidate_info.update({
                 'candidate_name': candidate_name,
@@ -1997,6 +2003,9 @@ elif st.session_state['current_page'] == "evaluation":
                 row_data.extend([content, row["점수"], row["의견"]])
             row_data.extend([summary, result, join_date, total_score])
             worksheet.append_row(row_data)
+            
+            # 처리 중 메시지 제거
+            progress_message.empty()
             
             # PDF 다운로드 버튼 표시
             import base64
