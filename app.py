@@ -2199,7 +2199,7 @@ elif st.session_state['current_page'] == "evaluation":
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; table-layout: fixed;">
                         <tr>
                             <th style="width: 18%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">평가구분</th>
-                            <th style="width: 39%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">내용</th>
+                            <th style="width: 39%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">평가내용</th>
                             <th style="width: 13%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0; text-align: center;">점수</th>
                             <th style="width: 30%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">의견</th>
                         </tr>"""
@@ -2599,7 +2599,7 @@ elif st.session_state['current_page'] == "admin":
                             <table style="table-layout: fixed;">
                                 <tr>
                                     <th style="width: 18%;">평가구분</th>
-                                    <th style="width: 39%;">내용</th>
+                                    <th style="width: 39%;">평가내용</th>
                                     <th style="width: 13%; text-align: center;">점수</th>
                                     <th style="width: 30%;">의견</th>
                                 </tr>"""
@@ -2664,7 +2664,7 @@ elif st.session_state['current_page'] == "admin":
                                     st.download_button(
                                         label="PDF 다운로드",
                                         data=pdf_buffer.getvalue(),
-                                        file_name=f"{selected_candidate}_면접평가표.pdf",
+                                        file_name=f"{selected_candidate}_{selected_row['직무']}_면접평가표.pdf",
                                         mime="application/pdf"
                                     )
                                 else:
