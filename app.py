@@ -1926,7 +1926,7 @@ elif st.session_state['current_page'] == "evaluation":
         st.markdown("<br><b>평가표 입력</b>", unsafe_allow_html=True)
         
         # 총점 표시를 위한 컨테이너와 점수 계산 버튼을 위한 컬럼
-        score_cols = st.columns([4, 1])
+        score_cols = st.columns([2, 1])
         
         # 총점 표시를 위한 컨테이너
         total_container = score_cols[0].empty()
@@ -1952,8 +1952,10 @@ elif st.session_state['current_page'] == "evaluation":
         
         # 오른쪽 컬럼에 점수 계산 버튼
         with score_cols[1]:
-            if st.form_submit_button("점수 계산하기", type="secondary", use_container_width=True):
+            st.markdown("<div style='text-align: right;'>", unsafe_allow_html=True)
+            if st.form_submit_button("점수 계산", type="secondary", use_container_width=False):
                 calculate_total()
+            st.markdown("</div>", unsafe_allow_html=True)
         
         for i, row in enumerate(st.session_state.eval_data):
             # 컬럼 비율 조정 (1:2:1:3:0.5)으로 변경
