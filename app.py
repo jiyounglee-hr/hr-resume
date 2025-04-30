@@ -2175,7 +2175,7 @@ elif st.session_state['current_page'] == "evaluation":
                 <div style="margin-bottom: 20px;">
                     <h2 style="font-size: 18px; margin-bottom: 10px;"> 면접평가표</h2>
                     <p><b>본부:</b> {selected_dept} / <b>직무:</b> {selected_job}</p>
-                    <p><b>면접관성명:</b> {interviewer_name} </p>
+                    <p><b>면접관성명:</b> {interviewer_name}님 </p>
                 </div>
                 <p><b>ㆍ후보자 정보 </b></p>
                 <div style="margin-bottom: 15px;">
@@ -2564,23 +2564,20 @@ elif st.session_state['current_page'] == "admin":
                         <div style="padding: 5px;">
                             <h2 style="font-size: 18px; margin-bottom: 5px;"> 면접평가표</h2>
                             <p><b>본부:</b> {selected_row['본부']} / <b>직무:</b> {selected_row['직무']}</p>
+                            <p><b>면접관성명:</b> {ielected_row['면접관성명'] or ''}님 </p>
                             <div class="section-title"><p><br><b>ㆍ후보자 정보</b></p></div>
                             <table style="table-layout: fixed;">
                                 <tr>
                                     <th style="width: 20%;">후보자명</th>
                                     <td style="width: 30%;">{selected_row['후보자명'] or ''}</td>
-                                    <th style="width: 20%;">면접관성명</th>
-                                    <td style="width: 30%;">{selected_row['면접관성명'] or ''}</td>
+                                    <th style="width: 20%;">경력년월</th>
+                                    <td style="width: 30%;">{selected_row['경력년월'] or ''}</td>
                                 </tr>
                                 <tr>
                                     <th>면접일자</th>
                                     <td>{selected_row['면접일자'] or ''}</td>
                                     <th>최종학교/전공</th>
                                     <td>{selected_row['최종학교/전공'] or ''}</td>
-                                </tr>
-                                <tr>
-                                    <th>경력년월</th>
-                                    <td colspan="3">{selected_row['경력년월'] or ''}</td>
                                 </tr>
                             </table>
 
