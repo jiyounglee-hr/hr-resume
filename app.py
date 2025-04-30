@@ -1751,6 +1751,24 @@ elif st.session_state['current_page'] == "interview2":
     """, unsafe_allow_html=True)
 
 elif st.session_state['current_page'] == "evaluation":
+    # 초기화 플래그 확인 및 처리
+    if 'reset_evaluation' in st.session_state and st.session_state.reset_evaluation:
+        # 세션 상태 초기화
+        st.session_state.dept_job_info = {
+            'selected_dept': None,
+            'selected_job': None
+        }
+        if 'eval_dept' in st.session_state:
+            del st.session_state.eval_dept
+        if 'eval_job' in st.session_state:
+            del st.session_state.eval_job
+        if 'eval_data' in st.session_state:
+            st.session_state.eval_data = default_template
+        if 'eval_opinions' in st.session_state:
+            st.session_state.eval_opinions = [''] * len(st.session_state.eval_data)
+        # 초기화 플래그 리셋
+        st.session_state.reset_evaluation = False
+    
     st.markdown("""
         <h5 style='color: #333333; margin-bottom: 20px;'>
             📝 면접 평가서 제출
@@ -1831,9 +1849,16 @@ elif st.session_state['current_page'] == "evaluation":
             selected_job = None
             st.session_state.dept_job_info['selected_job'] = None
     
-    # 오른쪽 컬럼: 여백
+    # 오른쪽 컬럼: 초기화 버튼
     with col3:
-        st.empty()
+        # 초기화 함수 정의
+        def reset_session():
+            # 초기화 플래그 설정
+            st.session_state.reset_evaluation = True
+        
+        # 초기화 버튼 (작은 크기로)
+        st.markdown("<div style='padding-top: 25px;'></div>", unsafe_allow_html=True)
+        st.button("🔄 초기화", on_click=reset_session, help="선택 항목을 초기화하고 페이지를 새로고침합니다.")
     
     st.markdown(f"**선택된 본부&직무 :** {selected_dept if selected_dept else '본부 미선택'} / {selected_job if selected_job else '직무 미선택'}")
     # 본부/직무 선택에 따라 템플릿 자동 반영
@@ -2383,12 +2408,15 @@ elif st.session_state['current_page'] == "admin":
                                 width: 100%;
                                 border-collapse: collapse;
                                 margin-bottom: 5px;
+                                table-layout: fixed;
                             }}
                             th, td {{
                                 border: 1px solid black;
                                 padding: 5px;
                                 text-align: left;
                                 font-family: 'Noto Sans KR', sans-serif !important;
+                                word-wrap: break-word;
+                                overflow-wrap: break-word;
                             }}
                             th {{
                                 background-color: #f2f2f2;
@@ -2401,6 +2429,9 @@ elif st.session_state['current_page'] == "admin":
                             }}
                             .section-title {{
                                 margin-left: 0px;
+                            }}
+                            .empty-cell {{
+                                min-height: 20px;
                             }}
                         </style>
                     </head>
