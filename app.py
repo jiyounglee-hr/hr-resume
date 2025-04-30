@@ -1891,40 +1891,35 @@ elif st.session_state['current_page'] == "evaluation":
                 "후보자명",
                 value=st.session_state.candidate_info['candidate_name'],
                 key="candidate_name",
-                label_visibility="visible",
-                required=True  # 필수 입력 설정
+                label_visibility="visible"
             )
         with candidate_info_cols[1]: 
             interviewer_name = st.text_input(
                 "면접관성명",
                 value=st.session_state.candidate_info['interviewer_name'],
                 key="interviewer_name",
-                label_visibility="visible",
-                required=True  # 필수 입력 설정
+                label_visibility="visible"
             )
         with candidate_info_cols[2]: 
             interview_date = st.date_input(
                 "면접일자",
                 value=st.session_state.candidate_info['interview_date'],
                 key="interview_date",
-                label_visibility="visible",
-                required=True  # 필수 입력 설정
+                label_visibility="visible"
             )
         with candidate_info_cols[3]: 
             education = st.text_input(
                 "최종학교/전공",
                 value=st.session_state.candidate_info['education'],
                 key="education",
-                label_visibility="visible",
-                required=True  # 필수 입력 설정
+                label_visibility="visible"
             )
         with candidate_info_cols[4]: 
             experience = st.text_input(
                 "경력년월",
                 value=st.session_state.candidate_info['experience'],
                 key="experience",
-                label_visibility="visible",
-                required=True  # 필수 입력 설정
+                label_visibility="visible"
             )
 
         # 평가표 데이터 입력
