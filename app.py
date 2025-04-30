@@ -1973,7 +1973,7 @@ elif st.session_state['current_page'] == "evaluation":
         join_date = st.text_input("입사가능시기", key="join_date", label_visibility="visible")
 
         # 총점 계산
-        total_score = st.session_state.total_score
+        total_score = sum(row["점수"] for row in st.session_state.eval_data)
 
         # 제출 상태 표시를 위한 컨테이너 추가
         submit_status = st.empty()
