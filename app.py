@@ -1161,7 +1161,7 @@ elif st.session_state['current_page'] == "interview1":
     
     st.markdown("""
     ① 1차 면접실시 : 사전에 협의 된 일정에 맞추어 면접을 진행합니다. 면접 순서 및 질문을 숙지해 주세요! <small style='color: #666666;'>
-            (아래 '🤖 AI가 이력서 분석을 도와드려요!'를 활용해 보세요)
+            (아래 '🤖 AI가 면접질문을 뽑아드려요.'를 활용해 보세요)
         </small>
     """)
     st.markdown(""" ② 1차 면접 평가제출 : 면접 결과를 작성하신 후 제출해 주세요.
