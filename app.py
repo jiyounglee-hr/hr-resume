@@ -1944,10 +1944,32 @@ elif st.session_state['current_page'] == "evaluation":
             """, unsafe_allow_html=True)
             return current_total
 
-        # 점수 계산 버튼과 총점 표시를 위한 컬럼
-        score_cols = st.columns([3, 1])
+        # 총점 표시를 위한 컨테이너와 점수 계산 버튼을 위한 컬럼
+        score_cols = st.columns([1, 1])
+        
+        # 총점 계산 함수
+        def calculate_total():
+            current_total = sum(row["점수"] for row in st.session_state.eval_data)
+            score_cols[0].markdown(f"""
+                <div style='
+                    background-color: #f0f2f6;
+                    padding: 10px;
+                    border-radius: 5px;
+                    text-align: center;
+                    margin: 10px 0;
+                    font-weight: bold;'>
+                    총점: {current_total} / 100
+                </div>
+            """, unsafe_allow_html=True)
+            return current_total
+
+        # 왼쪽 컬럼에 총점 표시
+        with score_cols[0]:
+            calculate_total()
+        
+        # 오른쪽 컬럼에 점수 계산 버튼
         with score_cols[1]:
-            if st.form_submit_button("점수 계산하기", type="secondary"):
+            if st.form_submit_button("점수 계산하기", type="secondary", use_container_width=True):
                 calculate_total()
         
         for i, row in enumerate(st.session_state.eval_data):
