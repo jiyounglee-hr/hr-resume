@@ -1452,7 +1452,7 @@ elif st.session_state['current_page'] == "interview1":
     
     ※ 2017년 1월 1일부터 「채용절차의 공정화에 관한 법률」(채용절차법)에 따라, 직무와 무관한 질문을 
     법으로 금지 (1,500만원 이상 벌금부과) 하고 있습니다.   
-    """)
+    """, unsafe_allow_html=True)
 elif st.session_state['current_page'] == "interview2":
     st.markdown("""
         <h5 style='color: #333333; margin-bottom: 20px;'>
