@@ -1968,15 +1968,22 @@ elif st.session_state['current_page'] == "evaluation":
 
         # 점수 합계 계산 및 표시 위한 함수
         def update_total_score():
-            # 디버깅용 점수 출력
-            scores = []
-            for row in st.session_state.eval_data:
-                score = row.get("점수", 0)
-                if score is None:
-                    score = 0
-                scores.append(score)
+            # 현재 입력 필드의 값을 가져와서 합산
+            current_scores = []
+            for i, row in enumerate(st.session_state.eval_data):
+                # 현재 입력된 점수 값을 가져옴 (number_input의 키 값 사용)
+                score_key = f"score_{i}"
+                if score_key in st.session_state:
+                    current_score = st.session_state[score_key]
+                else:
+                    current_score = row.get("점수", 0) or 0
+                
+                current_scores.append(current_score)
+                # 세션 상태 업데이트
+                st.session_state.eval_data[i]["점수"] = current_score
             
-            total = sum(scores)
+            # 현재 점수 합계 계산
+            total = sum(current_scores)
             st.session_state.total_score = total
             return total
         
@@ -1984,26 +1991,24 @@ elif st.session_state['current_page'] == "evaluation":
         st.markdown("<br><b>점수 합계</b>", unsafe_allow_html=True)
         total_score_cols = st.columns([1, 3, 1])
         
-        # 세션 상태에 total_score가 없으면 초기화
+        # 세션 상태에 total_score가 없으면 초기화하고 바로 계산
         if 'total_score' not in st.session_state:
-            # 점수 합계 초기화
-            scores = []
-            for row in st.session_state.eval_data:
-                score = row.get("점수", 0)
-                if score is None:
-                    score = 0
-                scores.append(score)
-            
-            st.session_state.total_score = sum(scores)
-            
+            update_total_score()
+        
         with total_score_cols[0]:
-            st.form_submit_button(
-                "점수합계 계산", 
-                on_click=update_total_score, 
-                type="primary"
+            # 키 값 추가하여 고유한 버튼으로 인식
+            calc_btn = st.form_submit_button(
+                "점수합계 계산",
+                key="calculate_score_btn",
+                on_click=update_total_score
             )
+            
+            # 버튼 클릭 시 즉시 계산하여 업데이트
+            if calc_btn:
+                update_total_score()
         
         with total_score_cols[1]:
+            # 점수 표시 - 현재 계산된 점수 표시
             st.markdown(f"""
             <div style='
                 background-color: #f8f9fa; 
@@ -2014,7 +2019,7 @@ elif st.session_state['current_page'] == "evaluation":
                 font-weight: bold;
                 font-size: 1.2em;
                 text-align: center;'>
-                총점: {st.session_state.total_score} / 100
+                총점: {update_total_score()} / 100
             </div>
             """, unsafe_allow_html=True)
         
