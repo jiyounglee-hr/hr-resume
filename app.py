@@ -1968,7 +1968,15 @@ elif st.session_state['current_page'] == "evaluation":
 
         # 점수 합계 계산 및 표시 위한 함수
         def update_total_score():
-            total = sum([row["점수"] for row in st.session_state.eval_data])
+            # 디버깅용 점수 출력
+            scores = []
+            for row in st.session_state.eval_data:
+                score = row.get("점수", 0)
+                if score is None:
+                    score = 0
+                scores.append(score)
+            
+            total = sum(scores)
             st.session_state.total_score = total
             return total
         
@@ -1978,7 +1986,15 @@ elif st.session_state['current_page'] == "evaluation":
         
         # 세션 상태에 total_score가 없으면 초기화
         if 'total_score' not in st.session_state:
-            st.session_state.total_score = sum([row["점수"] for row in st.session_state.eval_data])
+            # 점수 합계 초기화
+            scores = []
+            for row in st.session_state.eval_data:
+                score = row.get("점수", 0)
+                if score is None:
+                    score = 0
+                scores.append(score)
+            
+            st.session_state.total_score = sum(scores)
             
         with total_score_cols[0]:
             st.form_submit_button(
@@ -2347,7 +2363,7 @@ elif st.session_state['current_page'] == "evaluation":
                     b64 = base64.b64encode(pdf).decode()
                     col1, col2 = st.columns([1, 1])
                     with col1:
-                        st.success("제출이 완료되었습니다.")
+                        st.success("PDF생성이이 완료되었습니다.")
                     with col2:
                         st.markdown(
                             f'<a href="data:application/pdf;base64,{b64}" download="면접평가표.pdf" '
