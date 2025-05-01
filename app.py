@@ -514,23 +514,40 @@ st.markdown("""
             min-width: 300px !important;
             max-width: 100% !important;
             background-color: #f8f9fa;
+            transition: all 0.3s ease-in-out;
         }
         
         /* 모바일 화면에서의 사이드바 스타일 */
         @media (max-width: 768px) {
             [data-testid="stSidebar"] {
-                min-width: auto !important;
+                min-width: 0 !important;
                 max-width: 100% !important;
                 width: 100% !important;
-                margin-left: -100%;
-                position: absolute !important;
+                transform: translateX(0);
+                position: fixed !important;
+                z-index: 1000;
+                height: 100vh !important;
+                overflow-y: auto;
+                top: 0;
+                left: 0;
             }
             [data-testid="stSidebar"].--collapsed {
-                margin-left: -100% !important;
-                width: 0 !important;
+                transform: translateX(-100%);
             }
             section[data-testid="stSidebarContent"] {
                 width: 100% !important;
+                padding: 1rem;
+            }
+            button[kind="header"] {
+                z-index: 1001 !important;
+                position: fixed !important;
+            }
+        }
+        /* 사이드바가 열려있을 때 메인 콘텐츠 영역 스타일 */
+        @media (max-width: 768px) {
+            .main .block-container {
+                padding-left: 1rem;
+                padding-right: 1rem;
             }
         }
         [data-testid="stSidebar"] > div:first-child {
