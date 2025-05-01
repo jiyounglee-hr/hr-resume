@@ -519,8 +519,18 @@ st.markdown("""
         /* 모바일 화면에서의 사이드바 스타일 */
         @media (max-width: 768px) {
             [data-testid="stSidebar"] {
-                min-width: 100% !important;
+                min-width: auto !important;
                 max-width: 100% !important;
+                width: 100% !important;
+                margin-left: -100%;
+                position: absolute !important;
+            }
+            [data-testid="stSidebar"].--collapsed {
+                margin-left: -100% !important;
+                width: 0 !important;
+            }
+            section[data-testid="stSidebarContent"] {
+                width: 100% !important;
             }
         }
         [data-testid="stSidebar"] > div:first-child {
