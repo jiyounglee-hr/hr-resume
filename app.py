@@ -530,9 +530,10 @@ st.markdown("""
                 overflow-y: auto;
                 top: 0;
                 left: 0;
+                transition: transform 0.3s ease-in-out;
             }
-            [data-testid="stSidebar"].--collapsed {
-                transform: translateX(-100%);
+            [data-testid="stSidebar"].e1fqkh3o4 {
+                transform: translateX(-100%) !important;
             }
             section[data-testid="stSidebarContent"] {
                 width: 100% !important;
@@ -541,6 +542,12 @@ st.markdown("""
             button[kind="header"] {
                 z-index: 1001 !important;
                 position: fixed !important;
+            }
+            div[data-testid="collapsedControl"] {
+                z-index: 1001 !important;
+                position: fixed !important;
+                top: 0.5rem !important;
+                left: 0.5rem !important;
             }
         }
         /* 사이드바가 열려있을 때 메인 콘텐츠 영역 스타일 */
