@@ -511,9 +511,17 @@ if isinstance(page_param, str) and page_param in valid_pages:
 st.markdown("""
     <style>
         [data-testid="stSidebar"] {
-            min-width: 400px !important;
-            max-width: 400px !important;
+            min-width: 300px !important;
+            max-width: 100% !important;
             background-color: #f8f9fa;
+        }
+        
+        /* 모바일 화면에서의 사이드바 스타일 */
+        @media (max-width: 768px) {
+            [data-testid="stSidebar"] {
+                min-width: 100% !important;
+                max-width: 100% !important;
+            }
         }
         [data-testid="stSidebar"] > div:first-child {
             padding: 2rem;
