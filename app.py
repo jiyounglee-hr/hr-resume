@@ -1125,7 +1125,7 @@ if st.session_state['current_page'] == "resume":
     # 분석 결과를 구분선으로 분리하여 표시
     if st.session_state.analysis_result:
         st.markdown("<div style='margin-top: 10px;'>", unsafe_allow_html=True)
-        st.text_area("분석 결과", st.session_state.analysis_result, height=400)
+        st.text_area("분석 결과", st.session_state.analysis_result, height=500)
         st.markdown("</div>", unsafe_allow_html=True)
        # 서류전형 가이드라인 추가
     st.markdown("---")
