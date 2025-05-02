@@ -816,9 +816,9 @@ job_descriptions = {}
 # 현재 페이지에 따른 내용 표시
 if st.session_state['current_page'] == "resume":
     st.markdown("""
-        <h5 style='color: #333333; margin-bottom: 20px;'>
+        <h4 style='color: #333333; margin-bottom: 20px;'>
             🤖 서류전형 가이드
-        </h5>
+        </h4>
     """, unsafe_allow_html=True)
 
 
