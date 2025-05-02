@@ -1088,7 +1088,7 @@ if st.session_state['current_page'] == "resume":
         st.markdown("</div>", unsafe_allow_html=True)
        # 서류전형 가이드라인 추가
     st.markdown("---")
-    st.markdown("###### 🎯 서류전형에서 무엇을 확인해야 할까요?")
+    st.markdown("##### 🎯 서류전형에서 무엇을 확인해야 할까요?")
     
     # 이미지 추가
     st.markdown("""
@@ -1115,12 +1115,12 @@ if st.session_state['current_page'] == "resume":
     """)
 elif st.session_state['current_page'] == "interview1":
     st.markdown("""
-        <h5 style='color: #333333; margin-bottom: 20px;'>
+        <h4 style='color: #333333; margin-bottom: 20px;'>
             ☝️ 1차 면접 가이드
-        </h5>
+        </h4>
     """, unsafe_allow_html=True)
     
-    st.markdown("###### 🚩 1차 면접전형 절차는 어떻게 되나요?")
+    st.markdown("##### 🚩 1차 면접전형 절차는 어떻게 되나요?")
     
     st.markdown("""
      1. <b>면접실시</b> : 사전에 협의 된 일정에 맞추어 면접을 진행합니다. 면접 순서를 숙지해주시고 면접질문도 준비해 주세요! <small style='color: #666666;'>
@@ -1136,7 +1136,7 @@ elif st.session_state['current_page'] == "interview1":
     with button_col:
         st.button("📝 면접 평가서 제출", key="btn_eval_submit", on_click=switch_to_evaluation)
     st.markdown("---")
-    st.markdown("###### 🤖 AI가 면접질문을 뽑아 드려요.")
+    st.markdown("##### 🤖 AI가 면접질문을 뽑아 드려요.")
     st.markdown("""
         <div style='font-size: 13px; color: #0066cc;'>
         👈 왼쪽에 이력서를 업데이트(<a href="https://neurophet.sharepoint.com/sites/HR2/SitePages/%EC%B1%84%EC%9A%A9-%EC%A0%84%ED%98%95%EA%B4%80%EB%A6%AC.aspx" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, 채용공고를 선택해주세요. 
@@ -1275,7 +1275,7 @@ elif st.session_state['current_page'] == "interview1":
         st.text_area("1차 면접 질문", st.session_state.interview_questions1, height=450)
         st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("---")
-    st.markdown("###### 🐯 준길님께서 당부하신 주의사항")
+    st.markdown("##### 🐯 준길님께서 당부하신 주의사항")
     
     st.markdown("""
     1. 지원자에 대한 <b>예의, 편안함, 친절함</b>을 지켜주세요!</b>
@@ -1284,7 +1284,7 @@ elif st.session_state['current_page'] == "interview1":
     3. <b>압박 면접을 하지 말아주세요.</b> 어렵고 난이도 높은 질문의 경우에는 생각할 시간을 줘도 됩니다.
     """, unsafe_allow_html=True)
     st.markdown("---")
-    st.markdown("###### 📒 1차 면접 순서")
+    st.markdown("##### 📒 1차 면접 순서")
     st.markdown("""
     1. <b>면접관 사전 미팅</b><br> 면접 시작 10분 전, 면접관 간 진행 방식 및 역할 분담 등을 간단히 조율합니다.
 
@@ -1325,12 +1325,12 @@ elif st.session_state['current_page'] == "interview1":
     """, unsafe_allow_html=True)
 elif st.session_state['current_page'] == "interview2":
     st.markdown("""
-        <h5 style='color: #333333; margin-bottom: 20px;'>
+        <h4 style='color: #333333; margin-bottom: 20px;'>
             ✌️ 2차 면접 질문
-        </h5>
+        </h4>
     """, unsafe_allow_html=True)
     
-    st.markdown("###### 🚩 2차 면접전형 절차는 어떻게 되나요?")    
+    st.markdown("##### 🚩 2차 면접전형 절차는 어떻게 되나요?")    
     st.markdown("""
 
     1. <b>면접 진행</b> : 사전에 협의된 일정에 맞춰 면접을 진행합니다. <small style='color: #666666;'>
@@ -1346,7 +1346,7 @@ elif st.session_state['current_page'] == "interview2":
 
     st.markdown("---")
     # 채용공고 링크 입력   
-    st.markdown("###### 🤖 AI가 면접질문을 뽑아 드려요.")
+    st.markdown("##### 🤖 AI가 면접질문을 뽑아 드려요.")
     st.markdown("""
         <div style='font-size: 13px; color: #0066cc;'>
         👈 왼쪽에 이력서를 업데이트(<a href="https://neurophet.sharepoint.com/sites/HR2/SitePages/%EC%B1%84%EC%9A%A9-%EC%A0%84%ED%98%95%EA%B4%80%EB%A6%AC.aspx" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, 채용공고를 선택해주세요. 
@@ -1512,7 +1512,7 @@ elif st.session_state['current_page'] == "interview2":
         </small>
     """, unsafe_allow_html=True)  
     st.markdown("---")
-    st.markdown("###### 📒 2차 면접 순서")
+    st.markdown("##### 📒 2차 면접 순서")
     st.markdown("""
     1. <b>면접관 사전 미팅</b><br> 면접 시작 10분 전, 면접관 간 진행 방식 및 역할 분담 등을 간단히 조율합니다.
 
@@ -1556,9 +1556,9 @@ elif st.session_state['current_page'] == "evaluation":
         st.session_state.reset_evaluation = False
     
     st.markdown("""
-        <h5 style='color: #333333; margin-bottom: 20px;'>
+        <h4 style='color: #333333; margin-bottom: 20px;'>
             📝 면접 평가서 제출
-        </h5>
+        </h4>
     """, unsafe_allow_html=True)
     st.markdown("""
         <small style='color: #666666;'>
@@ -1643,7 +1643,7 @@ elif st.session_state['current_page'] == "evaluation":
             st.session_state.reset_evaluation = True
         
         # 초기화 버튼 (작은 크기로)
-        st.markdown("<div style='padding-top: 25px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='padding-top: 25px; border: 0px;'></div>", unsafe_allow_html=True)
         st.button("🔄", on_click=reset_session, help="본부 및 직무 선택을 초기화하고 페이지를 새로고침합니다.")
     
     st.markdown(f"**선택된 본부&직무 :** {selected_dept if selected_dept else '본부 미선택'} / {selected_job if selected_job else '직무 미선택'}")
