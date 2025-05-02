@@ -572,9 +572,9 @@ st.markdown("""
         }
         /* 사이드바 버튼 스타일 */
         [data-testid="stSidebar"] .stButton button {
-            width: 200px !important;
+            width: 180px !important;
             padding: 5px 6px !important;
-            margin: 2px 2px !important;
+            margin: 1px 1px !important;
             border: 1px solid #ddd;
             border-radius: 5px;
             background-color: white;
@@ -692,7 +692,7 @@ with st.sidebar:
         """, unsafe_allow_html=True)
 
     else:
-        st.markdown("<div class='upload-text'> 이력서 분석 및 면접 질문생성 기초 데이터 입니다. </div>", unsafe_allow_html=True)
+        st.markdown("<div class='upload-text'> 이력서 분석 및 면접 질문생성 시 필요합니다. </div>", unsafe_allow_html=True)
         st.markdown("---")  
     def switch_to_admin():
         st.query_params["page"] = "admin"
@@ -737,9 +737,8 @@ with st.sidebar:
     """, unsafe_allow_html=True)
     
     st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('<div class="label-text"><a href="https://career.neurophet.com/recruit" target="_blank" class="web-link"> 🔗 채용공고(뉴로핏 커리어) </a></div>', unsafe_allow_html=True)
     st.markdown('<div class="label-text"><a href="https://neurophet.sharepoint.com/sites/HR2/SitePages/%EC%B1%84%EC%9A%A9-%EC%A0%84%ED%98%95%EA%B4%80%EB%A6%AC.aspx" target="_blank" class="web-link"> 🔗 지원자 이력서(SharePoint) </a></div>', unsafe_allow_html=True)
-
+    st.markdown('<div class="label-text"><a href="https://career.neurophet.com/recruit" target="_blank" class="web-link"> 🔗 뉴로핏 커리어 </a></div>', unsafe_allow_html=True)
     # CSS 스타일 추가
     st.markdown("""
         <style>
@@ -762,9 +761,6 @@ with st.sidebar:
         }
         </style>
     """, unsafe_allow_html=True)
-
-    # 빈 공간 추가
-    st.markdown("<br>", unsafe_allow_html=True)
     
     # 채용관리자 버튼
     st.markdown(f"""
