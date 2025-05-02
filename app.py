@@ -737,8 +737,8 @@ with st.sidebar:
     """, unsafe_allow_html=True)
     
     st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('<div class="label-text"><a href="https://neurophet.sharepoint.com/sites/HR2/SitePages/%EC%B1%84%EC%9A%A9-%EC%A0%84%ED%98%95%EA%B4%80%EB%A6%AC.aspx" target="_blank" class="web-link"> 🔗 지원자 이력서(SharePoint) </a></div>', unsafe_allow_html=True)
-    st.markdown('<div class="label-text"><a href="https://career.neurophet.com/recruit" target="_blank" class="web-link"> 🔗 뉴로핏 커리어 </a></div>', unsafe_allow_html=True)
+    st.markdown('<div class="label-text"><a href="https://neurophet.sharepoint.com/sites/HR2/SitePages/%EC%B1%84%EC%9A%A9-%EC%A0%84%ED%98%95%EA%B4%80%EB%A6%AC.aspx" target="_blank" class="web-link"> 👤 지원자 이력서(SharePoint) </a></div>', unsafe_allow_html=True)
+    st.markdown('<div class="label-text"><a href="https://career.neurophet.com/recruit" target="_blank" class="web-link"> 🚀 뉴로핏 커리어 </a></div>', unsafe_allow_html=True)
     # CSS 스타일 추가
     st.markdown("""
         <style>
@@ -2513,8 +2513,5 @@ elif st.session_state['current_page'] == "admin":
         except Exception as e:
             st.error(f"데이터를 불러오는 중 오류가 발생했습니다: {str(e)}")
                     
-        st.markdown('<div class="label-text"><a href="https://docs.google.com/spreadsheets/d/1zwYJ2hwneCeSgd6p4s9ngll8PDmhLhq9qOTRo5SLCz8/edit?gid=0#gid=0" target="_blank" class="web-link">🔗 면접평가서 DB </a></div>', unsafe_allow_html=True)
-        st.markdown('<div class="label-text"><a href="https://docs.google.com/spreadsheets/d/1SfVtvaHgXesDFtdFozt9CJD8aQpPBrK76AxNj-OOfFE/edit?gid=2080076349#gid=2080076349" target="_blank" class="web-link">🔗채용공고 DB</a></div>', unsafe_allow_html=True)
-        st.markdown('<div class="label-text"><a href="https://docs.google.com/spreadsheets/d/1SfVtvaHgXesDFtdFozt9CJD8aQpPBrK76AxNj-OOfFE/edit?gid=0#gid=0" target="_blank" class="web-link">🔗직무기술서 DB</a></div>', unsafe_allow_html=True)
 
                     
