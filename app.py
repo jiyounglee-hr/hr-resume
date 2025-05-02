@@ -917,11 +917,11 @@ if st.session_state['current_page'] == "resume":
 
 기타 정보
 {posting_data['기타정보']}""",
-                    height=250
+                    height=320
                 )
         else:
             st.warning("활성화된 채용공고가 없습니다.")
-            job_description = st.text_area("채용공고 내용을 입력해주세요", height=500)
+            job_description = st.text_area("채용공고 내용을 입력해주세요", height=320)
     with right_col:
         experience_text = st.text_area(
             "- 경력기간 입력 (AI분석의 경력기간 산정이 잘못된 경우 활용해 보세요.)",  
