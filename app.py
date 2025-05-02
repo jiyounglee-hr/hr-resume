@@ -1197,17 +1197,18 @@ elif st.session_state['current_page'] == "interview1":
     
     # 질문 생성 로직
     if question_button:
-        if uploaded_file and job_description:
-            with st.spinner("면접 질문을 생성중입니다..."):
-                try:
-                    # 이력서 내용 가져오기
-                    text = st.session_state.resume_text
-                    
-                    # 1차 면접 질문 생성
-                    response1 = openai.ChatCompletion.create(
-                        model="gpt-3.5-turbo",
-                        messages=[
-                            {"role": "system", "content": """[당신의 역할]  
+        if uploaded_file:
+            if selected_posting and selected_posting != "선택":
+                with st.spinner("면접 질문을 생성중입니다..."):
+                    try:
+                        # 이력서 내용 가져오기
+                        text = st.session_state.resume_text
+                        
+                        # 1차 면접 질문 생성
+                        response1 = openai.ChatCompletion.create(
+                            model="gpt-3.5-turbo",
+                            messages=[
+                                {"role": "system", "content": """[당신의 역할]  
 당신은 지원자의 이력서와 채용공고 내용을 바탕으로 면접 질문을 준비하는 면접관입니다.  
 지원자의 과거 경험을 구체적으로 확인하고, 실제 업무 수행 역량을 검증하기 위해 STAR 기법에 기반한 질문을 작성해야 합니다.
 
@@ -1260,14 +1261,16 @@ elif st.session_state['current_page'] == "interview1":
 - 모든 질문은 STAR 구조를 따릅니다.  
 - 질문은 단순 사실 확인이 아닌, 지원자의 행동과 결과를 이끌어낼 수 있도록 구성하세요.  
 - 이력서와 채용공고의 연결고리를 고려해 질문을 구성하세요."""},
-                            {"role": "user", "content": f"이력서 내용:\n{text}\n\n채용공고:\n{job_description}\n\n위 내용을 바탕으로 STAR 기법에 기반한 면접 질문을 생성해주세요. 각 카테고리별로 최소 요구사항 이상의 질문을 생성해주세요."}
-                        ]
-                    )
-                    st.session_state.interview_questions1 = response1.choices[0].message.content
-                except Exception as e:
-                    st.error(f"질문 생성 중 오류가 발생했습니다: {str(e)}")
+                                {"role": "user", "content": f"이력서 내용:\n{text}\n\n채용공고:\n{job_description}\n\n위 내용을 바탕으로 STAR 기법에 기반한 면접 질문을 생성해주세요. 각 카테고리별로 최소 요구사항 이상의 질문을 생성해주세요."}
+                            ]
+                        )
+                        st.session_state.interview_questions1 = response1.choices[0].message.content
+                    except Exception as e:
+                        st.error(f"질문 생성 중 오류가 발생했습니다: {str(e)}")
+            else:
+                st.warning("채용공고를 선택해주세요.")
         else:
-            st.warning("이력서와 채용공고를 모두 입력해주세요.")
+            st.warning("이력서를 업로드해주세요.")
 
     # 면접 질문 결과 표시
     if st.session_state.interview_questions1:
@@ -1407,17 +1410,18 @@ elif st.session_state['current_page'] == "interview2":
     
     # 질문 생성 로직
     if question_button:
-        if uploaded_file and job_description:
-            with st.spinner("면접 질문을 생성중입니다..."):
-                try:
-                    # 이력서 내용 가져오기
-                    text = st.session_state.resume_text
-                    
-                    # 2차 면접 질문 생성
-                    response2 = openai.ChatCompletion.create(
-                        model="gpt-3.5-turbo",
-                        messages=[
-                            {"role": "system", "content": """[당신의 역할]  
+        if uploaded_file:
+            if selected_posting and selected_posting != "선택":
+                with st.spinner("면접 질문을 생성중입니다..."):
+                    try:
+                        # 이력서 내용 가져오기
+                        text = st.session_state.resume_text
+                        
+                        # 2차 면접 질문 생성
+                        response2 = openai.ChatCompletion.create(
+                            model="gpt-3.5-turbo",
+                            messages=[
+                                {"role": "system", "content": """[당신의 역할]  
 당신은 지원자의 이력서와 채용공고 내용을 바탕으로 면접 질문을 준비하는 본부장입니다.  
 지원자의 핵심가치 부합도를 확인하기 위해 STAR 기법에 기반한 질문을 작성해야 합니다.
 
@@ -1491,14 +1495,16 @@ elif st.session_state['current_page'] == "interview2":
 - 모든 질문은 STAR 구조를 따릅니다.  
 - 질문은 단순 사실 확인이 아닌, 지원자의 행동과 결과를 이끌어낼 수 있도록 구성하세요.  
 - 이력서와 채용공고의 연결고리를 고려해 질문을 구성하세요."""},
-                            {"role": "user", "content": f"이력서 내용:\n{text}\n\n채용공고:\n{job_description}\n\n위 내용을 바탕으로 STAR 기법에 기반한 면접 질문을 생성해주세요. 각 카테고리별로 최소 요구사항 이상의 질문을 생성해주세요."}
-                        ]
-                    )
-                    st.session_state.interview_questions2 = response2.choices[0].message.content
-                except Exception as e:
-                    st.error(f"질문 생성 중 오류가 발생했습니다: {str(e)}")
+                                {"role": "user", "content": f"이력서 내용:\n{text}\n\n채용공고:\n{job_description}\n\n위 내용을 바탕으로 STAR 기법에 기반한 면접 질문을 생성해주세요. 각 카테고리별로 최소 요구사항 이상의 질문을 생성해주세요."}
+                            ]
+                        )
+                        st.session_state.interview_questions2 = response2.choices[0].message.content
+                    except Exception as e:
+                        st.error(f"질문 생성 중 오류가 발생했습니다: {str(e)}")
+            else:
+                st.warning("채용공고를 선택해주세요.")
         else:
-            st.warning("이력서와 채용공고를 모두 입력해주세요.")
+            st.warning("이력서를 업로드해주세요.")
 
     # 면접 질문 결과 표시
     if st.session_state.interview_questions2:
