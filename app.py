@@ -1127,11 +1127,11 @@ elif st.session_state['current_page'] == "interview1":
     st.markdown("###### 🚩 1차 면접전형 절차는 어떻게 되나요?")
     
     st.markdown("""
-     1. <b>1차 면접실시</b> : 사전에 협의 된 일정에 맞추어 면접을 진행합니다. 면접 순서를 숙지해주시고 면접질문도 준비해 주세요! <small style='color: #666666;'>
+     1. <b>면접실시</b> : 사전에 협의 된 일정에 맞추어 면접을 진행합니다. 면접 순서를 숙지해주시고 면접질문도 준비해 주세요! <small style='color: #666666;'>
             (아래 '🤖 AI가 면접질문을 뽑아드려요.'를 활용해 보세요)
         </small>
     """, unsafe_allow_html=True)
-    st.markdown(""" 2. <b>1차 면접 평가제출</b> : 면접 결과를 작성하신 후 제출해 주세요.
+    st.markdown(""" 2. <b>면접 평가서 제출</b> : 면접 결과를 작성하신 후 제출해 주세요.
         <small style='color: #666666;'>
             ('📝 면접평가서 제출'버튼을 누르면 해당 페이지로 이동합니다.)
         </small>
@@ -1337,7 +1337,7 @@ elif st.session_state['current_page'] == "interview2":
     st.markdown("###### 🚩 2차 면접전형 절차는 어떻게 되나요?")    
     st.markdown("""
 
-    1. <b>2차 면접 진행</b> : 사전에 협의된 일정에 맞춰 면접을 진행합니다. <small style='color: #666666;'>
+    1. <b>면접 진행</b> : 사전에 협의된 일정에 맞춰 면접을 진행합니다. <small style='color: #666666;'>
             (아래 '🤖 AI가 면접질문을 뽑아 드려요!'를 통해 추출한 핵심가치 검토를 위한 면접 질문지를 인사팀에서 전달드립니다.)
         </small>
 
