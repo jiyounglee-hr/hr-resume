@@ -822,7 +822,7 @@ if st.session_state['current_page'] == "resume":
     """, unsafe_allow_html=True)
 
 
-    st.markdown("###### 🚩 서류전형 절차는 어떻게 되나요?")
+    st.markdown("##### 🚩 서류전형 절차는 어떻게 되나요?")
         
     st.markdown("""
         1. 서류접수 및 전달 : 지원서가 접수되면, 인사팀에서 팀즈(Teams)를 통해 검토를 요청드립니다.  
@@ -835,7 +835,7 @@ if st.session_state['current_page'] == "resume":
         """, unsafe_allow_html=True)
 
     st.markdown("---")
-    st.markdown("###### 🤖 AI가 이력서 분석을 도와드려요!")
+    st.markdown("##### 🤖 AI가 이력서 분석을 도와드려요!")
     st.markdown("""
         <div style='font-size: 13px; color: #0066cc;'>
         👈 왼쪽에 이력서를 업데이트(<a href="https://neurophet.sharepoint.com/sites/HR2/SitePages/%EC%B1%84%EC%9A%A9-%EC%A0%84%ED%98%95%EA%B4%80%EB%A6%AC.aspx" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, 채용공고를 선택해주세요. 
@@ -1088,7 +1088,7 @@ if st.session_state['current_page'] == "resume":
         st.markdown("</div>", unsafe_allow_html=True)
        # 서류전형 가이드라인 추가
     st.markdown("---")
-    st.markdown("###### 🎯 서류전형에서 무엇을 확인해야 할까요?")
+    st.markdown("######🎯 서류전형에서 무엇을 확인해야 할까요?")
     
     # 이미지 추가
     st.markdown("""
