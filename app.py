@@ -731,7 +731,7 @@ with st.sidebar:
             opacity: 0.8;
         }
         .label-text {
-            margin-bottom: 5px;
+            margin-bottom: 1px;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -744,11 +744,11 @@ with st.sidebar:
         <style>
         .admin-button {
             display: block;
-            margin-top: 5px;
+            margin-top: 1px;
             background: none;
             border: none;
             color: #888888;
-            font-size: 0.8em;
+            font-size: 0.5em;
             opacity: 0;
             cursor: pointer;
             padding: 0;
