@@ -1443,8 +1443,7 @@ elif st.session_state['current_page'] == "interview2":
         )
     st.markdown("""
         <small style='color: #666666;'>
-            AI를 통해 업무 지식 및 직무기술 직무 수행 태도 및 자세 관련 질문을 추출합니다. <br>
-            인상, 태도, 복장 등 전반적인 기본자세는 잘 관찰해주시고, 경력자의 경우 이직사유에 대해서도 체크부탁드립니다. 
+            AI를 통해 핵심가치(도전, 책임감, 협력, 전문성) 관련 질문을 추출합니다.<br>
         </small>
     """, unsafe_allow_html=True)  
 
@@ -1550,7 +1549,7 @@ elif st.session_state['current_page'] == "interview2":
     # 면접 질문 결과 표시
     if st.session_state.interview_questions2:
         st.markdown("<div style='margin-top: 10px;'>", unsafe_allow_html=True)
-        st.text_area("2차 면접 질문", st.session_state.interview_questions2, height=450)
+        st.text_area("2차 면접 질문", st.session_state.interview_questions2, height=650)
         st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("""
         <small style='color: #666666;'>
