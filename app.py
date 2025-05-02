@@ -925,7 +925,7 @@ if st.session_state['current_page'] == "resume":
     with left_col:
         experience_text = st.text_area(
             "- 경력기간 입력 (AI분석의 경력기간 산정이 잘못된 경우 활용해 보세요.)",  
-            height=120,
+            height=100,
             placeholder="ℹ️ YYYY-MM ~ YYYY-MM 형식으로 입력하시고 한 줄씩 입력하면 총 경력과 함께 자동으로 정리됩니다."
         )
 
