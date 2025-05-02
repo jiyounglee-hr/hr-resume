@@ -829,20 +829,20 @@ if st.session_state['current_page'] == "resume":
     st.markdown("###### 🚩 서류전형 절차는 어떻게 되나요?")
         
     st.markdown("""
-        ① 서류접수 및 전달 : 접수된 지원서를 인사팀에서 채용 채팅(팀즈)를 통해 검토 요청을 드립니다. 
+        1. 서류접수 및 전달 : 지원서가 접수되면, 인사팀에서 팀즈(Teams)를 통해 검토를 요청드립니다.  
     
-        ③ 서류검토 및 회신 : 면접관께서는 서류 검토 결과를 채용 채팅(팀즈)을 통해 회신해주세요. <small style='color: #666666;'>
+        2. 서류검토 및 회신 : 면접관께서는 서류 검토 결과를 팀즈(Teams)를 통해 회신해주세요. <small style='color: #666666;'>
             (아래 '🤖 AI가 이력서 분석을 도와드려요!'를 활용해 보세요)
         </small>
 
-        ④ 면접 일정 확인 및 통보: 합격자에 한해 인사팀이 면접관 및 지원자 일정 확인 후 1차 면접 일정을 조율하며, 불합격자는 인사팀에서 지원자에게 이메일로 개별 통보합니다.
+        3. 면접 일정 확인 및 통보: 합격자에 한해 인사팀이 면접관 및 지원자 일정 확인 후 1차 면접 일정을 조율하며, 불합격자는 인사팀에서 지원자에게 이메일로 개별 통보합니다.
         """, unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown("###### 🤖 AI가 이력서 분석을 도와드려요!")
     st.markdown("""
         <div style='font-size: 13px; color: #0066cc;'>
-        👈 왼쪽에 이력서를 업데이트(<a href="https://career.neurophet.com/recruit" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, 채용공고를 선택해주세요. 
+        👈 왼쪽에 이력서를 업데이트(<a href="https://neurophet.sharepoint.com/sites/HR2/SitePages/%EC%B1%84%EC%9A%A9-%EC%A0%84%ED%98%95%EA%B4%80%EB%A6%AC.aspx" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, 채용공고를 선택해주세요. 
         </div>
         """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
@@ -1143,7 +1143,7 @@ elif st.session_state['current_page'] == "interview1":
     st.markdown("###### 🤖 AI가 면접질문을 뽑아 드려요.")
     st.markdown("""
         <div style='font-size: 13px; color: #0066cc;'>
-        👈 왼쪽에 이력서를 업데이트(<a href="https://career.neurophet.com/recruit" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, 채용공고를 선택해주세요. 
+        👈 왼쪽에 이력서를 업데이트(<a href="https://neurophet.sharepoint.com/sites/HR2/SitePages/%EC%B1%84%EC%9A%A9-%EC%A0%84%ED%98%95%EA%B4%80%EB%A6%AC.aspx" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, 채용공고를 선택해주세요. 
         </div>
         """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
@@ -1320,10 +1320,9 @@ elif st.session_state['current_page'] == "interview1":
                 
     2. <b>출신지역ㆍ혼인여부ㆍ재산 관련 질문</b> : "사투리 쓰시네요? 어디 출신이에요?" "결혼하셨어요? 언제 하셨는데요?" "아이가 있으신가요?" "현재 만나는 사람이 없으신가요?"
     
-    3. <b>가족의 학력ㆍ직업</b> : "부모님은 무슨 일을 하시죠?" "부모님은 무슨 일을 하시죠?"
+    3. <b>가족의 학력ㆍ직업</b> : "부모님은 무슨 일을 하시죠?"
     
-    4. <b>그 외 인격모독적이거나 채용에 직접 관련된 질문</b> : "내가 뽑아주면 뭘 해 줄 수 있나요?" "그동안 뭐 했길래 경력이 이거 밖에 안 돼요?" "영~ 일 못할 것 같은데... 할 수 있겠어요?"
-    담배 피시나요? : "담배 피시나요?"
+    4. <b>그 외 인격모독적이거나 채용에 직접 관련된 질문</b> : "내가 뽑아주면 뭘 해 줄 수 있나요?" "그동안 뭐 했길래 경력이 이거 밖에 안 돼요?" "영~ 일 못할 것 같은데... 할 수 있겠어요?" "담배 피시나요?"
     
     ※ 2017년 1월 1일부터 「채용절차의 공정화에 관한 법률」(채용절차법)에 따라, 직무와 무관한 질문을 
     법으로 금지 (1,500만원 이상 벌금부과) 하고 있습니다.   
@@ -1342,7 +1341,7 @@ elif st.session_state['current_page'] == "interview2":
             (아래 '🤖 AI가 면접질문을 뽑아 드려요!'를 통해 추출한 핵심가치 검토를 위한 면접 질문지를 인사팀에서 전달드립니다.)
         </small>
 
-    2. <b>면접 결과 입력 및 전달</b> : 면접 종료 후, 채용 채팅(팀즈)를 통해 결과를 인사팀에 회신해 주세요.
+    2. <b>면접 결과 입력 및 전달</b> : 면접 종료 후, 팀즈(Teams)를 통해 결과를 인사팀에 회신해 주세요.
 
     3. <b>연봉 협상 및 입사 확정</b> (인사팀 진행)<br>
         - 합격자: 인사팀이 연봉협상 및 입사 일정을 안내합니다.<br>
@@ -1354,7 +1353,7 @@ elif st.session_state['current_page'] == "interview2":
     st.markdown("###### 🤖 AI가 면접질문을 뽑아 드려요.")
     st.markdown("""
         <div style='font-size: 13px; color: #0066cc;'>
-        👈 왼쪽에 이력서를 업데이트(<a href="https://career.neurophet.com/recruit" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, 채용공고를 선택해주세요. 
+        👈 왼쪽에 이력서를 업데이트(<a href="https://neurophet.sharepoint.com/sites/HR2/SitePages/%EC%B1%84%EC%9A%A9-%EC%A0%84%ED%98%95%EA%B4%80%EB%A6%AC.aspx" target="_blank">🔗이력서 링크</a>에서 다운로드) 하신 후, 채용공고를 선택해주세요. 
         </div>
         """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
@@ -1456,7 +1455,7 @@ elif st.session_state['current_page'] == "interview2":
 예시:  
 - 업무 수행 중 예상치 못한 문제가 발생했을 때, 그 당시 상황과 해결 과제, 본인의 대응 방식과 결과를 구체적으로 말씀해 주세요.
 
-3. [협력]동료와 협업합니다 (3개 질문)  
+3. [협력]동료와 협력합니다 (3개 질문)  
 지원자의 팀워크와 협업 능력을 확인할 수 있는 질문을 STAR 형식으로 구성하세요.  
 예시:  
 - 팀 프로젝트에서 의견 충돌이 있었던 상황에서, 그 당시 상황과 해결 과제, 본인의 대응 방식과 결과를 구체적으로 말씀해 주세요.
@@ -1479,7 +1478,7 @@ elif st.session_state['current_page'] == "interview2":
 2. 질문 2 (STAR 구조)  
 3. 질문 3 (STAR 구조)
 
-[협력]동료와 협업합니다  
+[협력]동료와 협력합니다  
                              
 1. 질문 1 (STAR 구조)  
 2. 질문 2 (STAR 구조)  
@@ -1531,14 +1530,14 @@ elif st.session_state['current_page'] == "interview2":
 
     5. <b>핵심가치 관련 질문</b><br> 지원서를 참고하여 핵심가치에 부합되는지 관련된 질문을 합니다. (✅ 위에 '🤖AI가 면접질문을 뽑아 드려요.' 기능 참고)
 
-    6. <b>희망연봉 확인</b><br> 원자의 최종 연봉과 희망 연봉을 확인하고, 면접 종료 후 인사팀에 채팅(DM)으로 전달해주세요. 
+    6. <b>희망연봉 확인</b><br> 지원자의 최종 연봉과 희망 연봉을 확인하고, 면접 종료 후 인사팀에 팀즈(Teams)로 전달해주세요. 
 
     7. <b>면접 종료 및 안내</b><br>
         ① 지원자에게 궁금한 점이 있는지 확인하고, 다음 전형 일정을 간단히 안내합니다. (예시: "2차 결과는 인사팀에서 개별 안내 드릴 예정입니다.")<br>
         ② 마지막에는 따뜻한 격려의 인사를 전해 주세요. (예시: "면접 보시느라 고생 많으셨습니다. 좋은 결과 있길 바랍니다. 수고하셨습니다.")
 
     8. <b>면접 평가 및 결과 전달</b><br>
-        면접 종료 후, 간단한 피드백을 포함하여 채용 채팅(팀즈)로 인사팀에 전달해 주세요. 연봉관련 정보나 특이사항도 확인 된 부분은 함께 전달 부탁드립니다. 
+        면접 종료 후, 간단한 피드백을 포함하여 팀즈(Teams)로 인사팀에 전달해 주세요. 연봉관련 정보나 특이사항도 확인 된 부분은 함께 전달 부탁드립니다. 
     """, unsafe_allow_html=True)
 
 elif st.session_state['current_page'] == "evaluation":
