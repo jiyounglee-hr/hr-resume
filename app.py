@@ -606,7 +606,7 @@ with st.sidebar:
     st.image("https://neurophethr.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fe3948c44-a232-43dd-9c54-c4142a1b670b%2Fneruophet_logo.png?table=block&id=893029a6-2091-4dd3-872b-4b7cd8f94384&spaceId=9453ab34-9a3e-45a8-a6b2-ec7f1cefbd7f&width=410&userId=&cache=v2", 
              width=120)
     
-    st.markdown("<div class='sidebar-title'>HR-채용</div>", unsafe_allow_html=True)
+    st.markdown("<div class='sidebar-title'>채용 전형 시스템</div>", unsafe_allow_html=True)
 
     # 버튼 컨테이너 추가
     st.markdown('<div class="button-container">', unsafe_allow_html=True)
@@ -738,7 +738,7 @@ with st.sidebar:
     
     st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('<div class="label-text"><a href="https://career.neurophet.com/recruit" target="_blank" class="web-link"> 🔗 채용공고(뉴로핏 커리어) </a></div>', unsafe_allow_html=True)
-    st.markdown('<div class="label-text"><a href="https://neurophet.sharepoint.com/sites/HR2/SitePages/%EC%B1%84%EC%9A%A9-%EC%A0%84%ED%98%95%EA%B4%80%EB%A6%AC.aspx" target="_blank" class="web-link"> 🔗 후보자 이력서 링크</a></div>', unsafe_allow_html=True)
+    st.markdown('<div class="label-text"><a href="https://neurophet.sharepoint.com/sites/HR2/SitePages/%EC%B1%84%EC%9A%A9-%EC%A0%84%ED%98%95%EA%B4%80%EB%A6%AC.aspx" target="_blank" class="web-link"> 🔗 지원자 이력서(SharePoint) </a></div>', unsafe_allow_html=True)
 
     # CSS 스타일 추가
     st.markdown("""
