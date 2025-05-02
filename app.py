@@ -951,7 +951,7 @@ if st.session_state['current_page'] == "resume":
                         padding: 20px;
                         border-radius: 5px;
                         border: 1px solid #ddd;
-                        max-height: 450px;
+                        max-height: 250px;
                         overflow-y: auto;
                         font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
                         font-size: 0.9em;
