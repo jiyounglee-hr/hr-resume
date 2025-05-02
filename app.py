@@ -780,6 +780,13 @@ with st.sidebar:
 
 def get_job_postings_from_sheet():
     try:
+        # 세션 상태에 job_postings가 있고, 마지막 업데이트 시간이 5분 이내라면 캐시된 데이터 반환
+        current_time = time.time()
+        if ('job_postings' in st.session_state and 
+            'job_postings_last_update' in st.session_state and 
+            current_time - st.session_state.job_postings_last_update < 300):  # 5분 = 300초
+            return st.session_state.job_postings
+
         scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
         credentials_dict = {
             "type": st.secrets["google_credentials"]["type"],
@@ -793,23 +800,57 @@ def get_job_postings_from_sheet():
             "auth_provider_x509_cert_url": st.secrets["google_credentials"]["auth_provider_x509_cert_url"],
             "client_x509_cert_url": st.secrets["google_credentials"]["client_x509_cert_url"]
         }
-        credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict, scope)
-        gc = gspread.authorize(credentials)
-        
-        # 채용공고 데이터가 있는 시트 ID (기존 시트 사용)
-        sheet_id = st.secrets["google_sheets"]["department_job_sheet_id"]
-        worksheet = gc.open_by_key(sheet_id).worksheet("채용공고")  # 채용공고 시트 사용
-        
-        # 모든 데이터 가져오기
-        data = worksheet.get_all_records()
-        
-        # 채용공고 목록 생성 (직무 - 채용공고 제목 형식)
-        job_postings = {f"{row['직무']} - {row['제목']}": row for row in data if row['활성화'] == 'Y'}
-        
-        return job_postings
+
+        max_retries = 3
+        retry_count = 0
+        retry_delay = 2  # 초기 대기 시간 (초)
+
+        while retry_count < max_retries:
+            try:
+                credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict, scope)
+                gc = gspread.authorize(credentials)
+                sheet_id = st.secrets["google_sheets"]["department_job_sheet_id"]
+                worksheet = gc.open_by_key(sheet_id).worksheet("채용공고")
+                
+                # API 호출 간격 조절
+                time.sleep(1)
+                
+                data = worksheet.get_all_records()
+                job_postings = {f"{row['직무']} - {row['제목']}": row for row in data if row['활성화'] == 'Y'}
+                
+                # 데이터를 세션 상태에 저장
+                st.session_state.job_postings = job_postings
+                st.session_state.job_postings_last_update = current_time
+                
+                return job_postings
+
+            except gspread.exceptions.APIError as e:
+                error_message = str(e)
+                retry_count += 1
+                
+                if retry_count < max_retries:
+                    if "429" in error_message or "RESOURCE_EXHAUSTED" in error_message:
+                        wait_time = retry_delay * (2 ** (retry_count - 1))  # 지수 백오프
+                        st.warning(f"데이터를 가져오는 중입니다. {wait_time}초 후 재시도합니다... ({retry_count}/{max_retries})")
+                        time.sleep(wait_time)
+                        continue
+                else:
+                    if "429" in error_message or "RESOURCE_EXHAUSTED" in error_message:
+                        st.error("일시적으로 데이터를 가져올 수 없습니다. 잠시 후 다시 시도해주세요.")
+                    else:
+                        st.error(f"채용공고 데이터를 가져오는 중 오류가 발생했습니다: {str(e)}")
+                    return {}
+
+            except Exception as e:
+                st.error(f"채용공고 데이터를 가져오는 중 오류가 발생했습니다: {str(e)}")
+                return {}
+
+        return {}  # 모든 재시도 실패 시 빈 딕셔너리 반환
+
     except Exception as e:
-        st.error(f"채용공고 데이터를 불러오는 중 오류가 발생했습니다: {str(e)}")
+        st.error(f"채용공고 데이터를 가져오는 중 오류가 발생했습니다: {str(e)}")
         return {}
+
 # 채용공고 데이터
 job_descriptions = {}
 
