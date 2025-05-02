@@ -1328,7 +1328,7 @@ elif st.session_state['current_page'] == "interview1":
     3. <b>압박 면접을 하지 말아주세요.</b> 어렵고 난이도 높은 질문의 경우에는 생각할 시간을 줘도 됩니다.
     """, unsafe_allow_html=True)
     st.markdown("---")
-    st.markdown("##### 📒 1차 면접 순서")
+    st.markdown("##### 📒 1차 면접 진행 순서")
     st.markdown("""
     1. <b>면접관 사전 미팅</b><br> 면접 시작 10분 전, 면접관 간 진행 방식 및 역할 분담 등을 간단히 조율합니다.
 
@@ -1353,7 +1353,7 @@ elif st.session_state['current_page'] == "interview1":
 
     """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown("###### 🚫  면접 시 절대 하지 말아야 하는 질문 ")
+    st.markdown("##### 🚫  면접 시 절대 하지 말아야 하는 질문 ")
     st.markdown("""
      면접 시 직무와 무관한 질문은 자제해 주시기 바랍니다. 
     1. <b>신체적 조건</b> : "생각보다 작아 보이는데 키가 얼마나 되시나요?" "체격이 좋네요. 어렸을 때 운동하셨나요?" 
