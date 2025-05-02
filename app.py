@@ -1549,7 +1549,7 @@ elif st.session_state['current_page'] == "interview2":
     # 면접 질문 결과 표시
     if st.session_state.interview_questions2:
         st.markdown("<div style='margin-top: 10px;'>", unsafe_allow_html=True)
-        st.text_area("2차 면접 질문", st.session_state.interview_questions2, height=700)
+        st.text_area("2차 면접 질문", st.session_state.interview_questions2, height=720)
         st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("""
         <small style='color: #666666;'>
