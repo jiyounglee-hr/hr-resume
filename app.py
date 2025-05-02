@@ -922,7 +922,7 @@ if st.session_state['current_page'] == "resume":
         else:
             st.warning("활성화된 채용공고가 없습니다.")
             job_description = st.text_area("채용공고 내용을 입력해주세요", height=300)
-    with left_col:
+    with right_col:
         experience_text = st.text_area(
             "- 경력기간 입력 (AI분석의 경력기간 산정이 잘못된 경우 활용해 보세요.)",  
             height=100,
