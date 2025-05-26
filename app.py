@@ -104,13 +104,26 @@ def get_eval_template_from_sheet(selected_dept, selected_job):
                 def format_items(val):
                     if not val:
                         return ""
-                    # 먼저 모든 bullet point를 제거하고 쉼표나 줄바꿈으로 분리
-                    items = []
+                    # 먼저 모든 bullet point를 제거
                     text = str(val).replace('•', '').strip()
-                    for item in text.replace('\n', ',').split(','):
-                        if item.strip():
-                            items.append(item.strip())
-                    return "\n".join(f"• {item}" for item in items)
+                    formatted_lines = []
+                    
+                    # 줄바꿈으로 분리된 각 라인 처리
+                    for line in text.split('\n'):
+                        line = line.strip()
+                        if not line:
+                            continue
+                        
+                        if ',' in line:
+                            # 콤마가 있는 경우 같은 줄에 bullet point로 구분
+                            items = [item.strip() for item in line.split(',')]
+                            formatted_lines.append(' • '.join(items))
+                        else:
+                            # 콤마가 없는 경우 단일 항목으로 처리
+                            formatted_lines.append(line)
+                    
+                    # 각 라인을 bullet point와 함께 결합
+                    return '\n'.join(f"• {line}" for line in formatted_lines)
                 
                 st.markdown("""
                     <style>
@@ -1755,7 +1768,7 @@ elif st.session_state['current_page'] == "evaluation":
             )
 
         # 평가표 데이터 입력
-        st.markdown("<br><b>평가표 입력1</b>", unsafe_allow_html=True)
+        st.markdown("<br><b>평가표 입력</b>", unsafe_allow_html=True)
         
 
         for i, row in enumerate(st.session_state.eval_data):
