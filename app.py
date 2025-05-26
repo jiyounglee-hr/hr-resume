@@ -115,9 +115,8 @@ def get_eval_template_from_sheet(selected_dept, selected_job):
                             continue
                         
                         if ',' in line:
-                            # 콤마가 있는 경우 같은 줄에 bullet point로 구분
-                            items = [item.strip() for item in line.split(',')]
-                            formatted_lines.append(' • '.join(items))
+                            # 콤마가 있는 경우 콤마를 유지하면서 표시
+                            formatted_lines.append(line)
                         else:
                             # 콤마가 없는 경우 단일 항목으로 처리
                             formatted_lines.append(line)
@@ -1780,7 +1779,7 @@ elif st.session_state['current_page'] == "evaluation":
             content_lines = []
             for line in row["내용"].replace('•', '').split('\n'):
                 if ',' in line:
-                    # 콤마가 있는 경우 하나의 라인으로 처리 
+                    # 콤마가 있는 경우 콤마를 유지하면서 표시
                     items = [item.strip() for item in line.split(',')]
                     content_lines.append(' • '.join(items))
                 else:
