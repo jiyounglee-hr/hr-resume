@@ -1781,7 +1781,7 @@ elif st.session_state['current_page'] == "evaluation":
                 if ',' in line:
                     # 콤마가 있는 경우 콤마를 유지하면서 표시
                     items = [item.strip() for item in line.split(',')]
-                    content_lines.append(' • '.join(items))
+                    content_lines.append(' , '.join(items))
                 else:
                     content_lines.append(line.strip())
             
