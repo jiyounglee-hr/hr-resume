@@ -1767,7 +1767,7 @@ elif st.session_state['current_page'] == "evaluation":
             content_lines = []
             for line in row["내용"].replace('•', '').split('\n'):
                 if ',' in line:
-                    # 콤마가 있는 경우 하나의 라인으로 처리
+                    # 콤마가 있는 경우 하나의 라인으로 처리 
                     items = [item.strip() for item in line.split(',')]
                     content_lines.append(' • '.join(items))
                 else:
