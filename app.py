@@ -1764,8 +1764,16 @@ elif st.session_state['current_page'] == "evaluation":
             cols[0].write(row["구분"])
             
             # 내용 컬럼에 스타일 적용
-            content_lines = row["내용"].replace('•', '').split('\n')
-            formatted_content = '<br>'.join([f"• {line.strip()}" for line in content_lines if line.strip()])
+            content_lines = []
+            for line in row["내용"].replace('•', '').split('\n'):
+                if ',' in line:
+                    # 콤마가 있는 경우 하나의 라인으로 처리
+                    items = [item.strip() for item in line.split(',')]
+                    content_lines.append(' • '.join(items))
+                else:
+                    content_lines.append(line.strip())
+            
+            formatted_content = '<br>'.join([f"• {line}" for line in content_lines if line])
             cols[1].markdown(
                 f"""<div style='font-size: 0.9em; line-height: 1.5;'>{formatted_content}</div>""",
                 unsafe_allow_html=True
