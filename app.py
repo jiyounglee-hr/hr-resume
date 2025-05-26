@@ -1755,7 +1755,7 @@ elif st.session_state['current_page'] == "evaluation":
             )
 
         # 평가표 데이터 입력
-        st.markdown("<br><b>평가표 입력</b>", unsafe_allow_html=True)
+        st.markdown("<br><b>평가표 입력1</b>", unsafe_allow_html=True)
         
 
         for i, row in enumerate(st.session_state.eval_data):
